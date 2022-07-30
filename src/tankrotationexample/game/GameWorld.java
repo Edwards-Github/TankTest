@@ -147,6 +147,8 @@ public class GameWorld extends JPanel implements Runnable {
         buffer.fillRect(0,0, GameConstants.WORLD_WIDTH, GameConstants.WORLD_HEIGHT);
         walls.forEach(w -> w.drawImage(buffer));
 
+//        walls.removeIf(Objects::nonNull);
+
         this.t1.drawImage(buffer);
         this.t2.drawImage(buffer);
         g2.drawImage(world, 0, 0, null);
