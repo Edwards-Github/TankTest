@@ -28,8 +28,6 @@ public class Tank extends GameObject{
     float coolDown = 0f;
     float rateOfFire = 1f;
 
-    float charge = 1f;
-    float chargeRate = .05f;
     private BufferedImage img;
     private boolean UpPressed;
     private boolean DownPressed;
@@ -98,9 +96,7 @@ public class Tank extends GameObject{
     void unToggleShootPressed() {
         this.shootPressed = false;
         if(b != null){
-            b.setScaleFactor(charge);
             b.setPosition(setBulletStartX(), setBulletStartY(), angle);
-            this.charge = 0;
             this.ammo.add(b);
             b = null;
         }}
@@ -129,13 +125,11 @@ public class Tank extends GameObject{
 
         if(this.shootPressed && this.coolDown >= this.fireDelay){
             this.coolDown = 0;
-            this.charge += this.chargeRate;
             (new Sound(Resources.getSound("bullet"))).playSound();
             if(b == null){
-                b = new Bullet(this.setBulletStartX(), this.setBulletStartY(), angle, charge, Resources.getImage("bullet"));
+                b = new Bullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("bullet"));
             }else{
                 b.setPosition(setBulletStartX(), setBulletStartY(), angle);
-                b.setScaleFactor(charge);
             }
         }
         this.coolDown += this.rateOfFire;
