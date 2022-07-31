@@ -13,6 +13,7 @@ public class Bullet {
     float scaleFactor = 1f;
     private float R = 2f;
     private BufferedImage img;
+    private Rectangle hitBox;
 
     Bullet(float x, float y, float angle, float charge, BufferedImage img) {
         this.x = x;
@@ -20,6 +21,7 @@ public class Bullet {
         this.img = img;
         this.scaleFactor = charge;
         this.angle = angle;
+        this.hitBox = new Rectangle((int)x,(int)y, this.img.getWidth(), this.img.getHeight());
     }
 
 
@@ -81,6 +83,10 @@ public class Bullet {
             scaleFactor = 15f;
         }
         this.scaleFactor = scaleFactor;
+    }
+
+    public Rectangle getHitBox(){
+        return this.hitBox.getBounds();
     }
 }
 

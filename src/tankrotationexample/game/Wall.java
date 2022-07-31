@@ -30,4 +30,8 @@ public class Wall {
         buffer.drawRect((int)x, (int)y, this.img.getWidth(), this.img.getHeight());
 
     }
+
+    public Rectangle getHitBox(){
+        return this.hitBox.getBounds();
+    }
 }

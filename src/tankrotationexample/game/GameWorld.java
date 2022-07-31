@@ -37,6 +37,7 @@ public class GameWorld extends JPanel implements Runnable {
     private Launcher lf;
     private long tick = 0;
     List<Wall> walls = new ArrayList<>();
+//    List<PowerUp> powerUps = new ArrayList<>();
 
     /**
      * 
@@ -57,6 +58,59 @@ public class GameWorld extends JPanel implements Runnable {
                 this.tick++;
                 this.t1.update(); // update tank
                 this.t2.update(); // update tank
+
+                // checking hitboxes for tank 1 against walls
+                for (int i = 0; i < walls.size(); i++) {
+                    Wall w = this.walls.get(i);
+                    if(w.getHitBox().intersects(this.t1.getHitBox())){
+                        System.out.println("t1 has hit a wall");
+                    }
+                }
+
+                // checking hitboxes for tank 2 against walls
+                for (int i = 0; i < walls.size(); i++) {
+                    Wall w = this.walls.get(i);
+                    if(w.getHitBox().intersects(this.t2.getHitBox())){
+                        System.out.println("t2 has hit a wall");
+                    }
+                }
+
+//                // checking hitboxes for tank 1 against bullets from tank 2
+                if (this.t2.ammo.size() > 0) {
+                    for (int i = 0; i < this.t2.ammo.size(); i++) {
+                        Bullet b = this.t2.ammo.get(i);
+                        if (b.getHitBox().intersects(this.t1.getHitBox())) {
+                            System.out.println("t1 was hit by t2 bullet");
+                        }
+                    }
+                }
+//
+//                // checking hitboxes for tank 2 against bullets
+                if (this.t1.ammo.size() > 0) {
+                    for (int i = 0; i < this.t1.ammo.size(); i++) {
+                        Bullet b = this.t1.ammo.get(i);
+                        if (b.getHitBox().intersects(this.t2.getHitBox())) {
+                            System.out.println("t2 was hit by a t1 bullet");
+                        }
+                    }
+                }
+
+//                // checking hitboxes for tank 1
+//                for (int i = 0; i < this.powerUps.size(); i++) {
+//                    PowerUp p = this.powerUps.get(i);
+//                    if(p.getHitBox().intersects(this.t1.getHitBox())){
+//                        System.out.println("t1 has hit a power up");
+//                    }
+//                }
+//
+//                // checking hitboxes for tank 1
+//                for (int i = 0; i < this.powerUps.size(); i++) {
+//                    PowerUp p = this.powerUps.get(i);
+//                    if(p.getHitBox().intersects(this.t2.getHitBox())){
+//                        System.out.println("t2 has hit a power up");
+//                    }
+//                }
+
                 this.repaint();   // redraw game
                 
                 /*

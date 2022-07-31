@@ -14,9 +14,7 @@ import java.util.List;
  *
  * @author anthony-pc
  */
-public class Tank{
-    private float x;
-    private float y;
+public class Tank extends GameObject{
     private float vx;
     private float vy;
     private float angle;
@@ -59,7 +57,6 @@ public class Tank{
         this.x = x;
         this.y = y;
         this.hitBox.setLocation((int)x, (int)y);
-        // add hitbox move
     }
 
     void setX(float x){ this.x = x; }
@@ -261,5 +258,9 @@ public class Tank{
             g2d.drawOval((int) x + (i * 20), (int) y + 55, 15, 15);
             g2d.fillOval((int) x + (i * 20), (int) y + 55, 15, 15);
         }
+    }
+
+    public Rectangle getHitBox(){
+        return this.hitBox.getBounds();
     }
 }
