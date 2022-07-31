@@ -21,6 +21,8 @@ public class Tank{
     private float vy;
     private float angle;
 
+    int health = 100;
+    int lives = 3;
     private float R = 5;
     private float ROTATIONSPEED = 3.0f;
 
@@ -37,6 +39,8 @@ public class Tank{
     private boolean LeftPressed;
     private boolean shootPressed;
 
+    private Rectangle hitBox;
+
     List<Bullet> ammo = new ArrayList<>();
     Bullet b;
 
@@ -47,6 +51,15 @@ public class Tank{
         this.vy = vy;
         this.img = img;
         this.angle = angle;
+        this.health = health;
+        this.hitBox = new Rectangle((int)x,(int)y, this.img.getWidth(), this.img.getHeight());
+    }
+
+    void setPosition(float x, float y){
+        this.x = x;
+        this.y = y;
+        this.hitBox.setLocation((int)x, (int)y);
+        // add hitbox move
     }
 
     void setX(float x){ this.x = x; }
@@ -160,6 +173,7 @@ public class Tank{
         x -= vx;
         y -= vy;
        checkBorder();
+        this.hitBox.setLocation((int)x, (int)y);
     }
 
     private void moveForwards() {
@@ -168,6 +182,7 @@ public class Tank{
         x += vx;
         y += vy;
         checkBorder();
+        this.hitBox.setLocation((int)x, (int)y);
     }
 
 
@@ -191,17 +206,60 @@ public class Tank{
         return "x=" + x + ", y=" + y + ", angle=" + angle;
     }
 
+//    private void center_screen() {
+//        this.screen_x = (int)this.getX() - GameConstants.GAME_SCREEN_WIDTH / 4;
+//        this.screen_y = (int)this.getY() - GameConstants.GAME_SCREEN_HEIGHT / 2;
+//
+//        if (this.screen_x < 0) {
+//            this.screen_x = 0;
+//        }
+//        if (this.screen_y < 0) {
+//            this.screen_y = 0;
+//        }
+//
+//        // keep camera still at right border
+//        if(screen_x > GameConstants.WORLD_WIDTH - GameConstants.GAME_SCREEN_WIDTH / 2) {
+//            screen_x = GameConstants.WORLD_WIDTH - GameConstants.GAME_SCREEN_WIDTH / 2;
+//        }
+//
+//        // keep camera still at bottom border
+//        if (screen_y > GameConstants.WORLD_HEIGHT - GameConstants.GAME_SCREEN_HEIGHT) {
+//            screen_y = GameConstants.WORLD_HEIGHT - GameConstants.GAME_SCREEN_HEIGHT;
+//        }
+//    }
 
     void drawImage(Graphics g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
         Graphics2D g2d = (Graphics2D) g;
+        g2d.drawImage(this.img, rotation, null);
         if(b != null){
             b.drawImage(g2d);
         }
         this.ammo.forEach(b -> b.drawImage(g2d));
-        g2d.drawImage(this.img, rotation, null);
-        g2d.setColor(Color.RED);
-        g2d.drawRect((int)x,(int)y,this.img.getWidth(), this.img.getHeight());
+
+        g2d.setColor(Color.MAGENTA);
+        g2d.drawRect((int)x, (int)y, this.img.getWidth(), this.img.getHeight());
+
+        // Health bar
+        g2d.setColor(Color.BLUE);
+        g2d.drawRect((int)x,(int)y - 30, 100, 25);
+        // set color of health bar
+        if(this.health >= 70){
+            g2d.setColor(Color.GREEN);
+        }else if(this.health >= 50){
+            g2d.setColor(Color.YELLOW);
+        }else{
+            g2d.setColor(Color.RED);
+        }
+        g2d.fillRect((int)x,(int)y - 30, health, 25);
+        g2d.drawString("" + this.health, (int)x, (int)y-35);
+
+        // Lives
+        for (int i = 0; i < this.lives; i++) {
+            g2d.setColor(Color.RED);
+            g2d.drawOval((int) x + (i * 20), (int) y + 55, 15, 15);
+            g2d.fillOval((int) x + (i * 20), (int) y + 55, 15, 15);
+        }
     }
 }
