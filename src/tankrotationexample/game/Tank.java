@@ -7,6 +7,8 @@ import tankrotationexample.Sound;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -22,11 +24,21 @@ public class Tank{
     private float R = 5;
     private float ROTATIONSPEED = 3.0f;
 
+    float fireDelay = 120f;
+    float coolDown = 0f;
+    float rateOfFire = 1f;
+
+    float charge = 1f;
+    float chargeRate = .05f;
     private BufferedImage img;
     private boolean UpPressed;
     private boolean DownPressed;
     private boolean RightPressed;
     private boolean LeftPressed;
+    private boolean shootPressed;
+
+    List<Bullet> ammo = new ArrayList<>();
+    Bullet b;
 
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
         this.x = x;
@@ -57,6 +69,8 @@ public class Tank{
         this.LeftPressed = true;
     }
 
+    void toggleShootPressed() { this.shootPressed = true; }
+
     void unToggleUpPressed() {
         this.UpPressed = false;
     }
@@ -69,9 +83,17 @@ public class Tank{
         this.RightPressed = false;
     }
 
-    void unToggleLeftPressed() {
-        this.LeftPressed = false;
-    }
+    void unToggleLeftPressed() { this.LeftPressed = false; }
+
+    void unToggleShootPressed() {
+        this.shootPressed = false;
+        if(b != null){
+            b.setScaleFactor(charge);
+            b.setPosition(setBulletStartX(), setBulletStartY(), angle);
+            this.charge = 0;
+            this.ammo.add(b);
+            b = null;
+        }}
 
     public float getX() { return x; }
 
@@ -95,9 +117,33 @@ public class Tank{
             this.rotateRight();
         }
 
-//        if(this.shootPressed){
-//            (new Sound(Resources.getSound("bullet"))).playSound();
+        if(this.shootPressed && this.coolDown >= this.fireDelay){
+            this.coolDown = 0;
+            this.charge += this.chargeRate;
+            (new Sound(Resources.getSound("bullet"))).playSound();
+            if(b == null){
+                b = new Bullet(this.setBulletStartX(), this.setBulletStartY(), angle, charge, Resources.getImage("bullet"));
+            }else{
+                b.setPosition(setBulletStartX(), setBulletStartY(), angle);
+                b.setScaleFactor(charge);
+            }
+        }
+        this.coolDown += this.rateOfFire;
+
+//        if(b != null){
+//            b.update();
 //        }
+        this.ammo.forEach(b -> b.update());
+    }
+
+    private int setBulletStartX() {
+        float cx = 29f*(float)Math.cos(Math.toRadians(angle));
+        return (int)x+this.img.getWidth()/2 + (int)cx-4;
+    }
+
+    private int setBulletStartY() {
+        float cy = 29f*(float)Math.sin(Math.toRadians(angle));
+        return (int)y+this.img.getHeight()/2 + (int)cy-4;
     }
 
     private void rotateLeft() {
@@ -150,6 +196,10 @@ public class Tank{
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
         Graphics2D g2d = (Graphics2D) g;
+        if(b != null){
+            b.drawImage(g2d);
+        }
+        this.ammo.forEach(b -> b.drawImage(g2d));
         g2d.drawImage(this.img, rotation, null);
         g2d.setColor(Color.RED);
         g2d.drawRect((int)x,(int)y,this.img.getWidth(), this.img.getHeight());

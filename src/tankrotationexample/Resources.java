@@ -33,6 +33,10 @@ public class Resources {
             Resources.images.put("break1", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("walls/break1.jpg"))));
             Resources.images.put("break2", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("walls/break2.jpg"))));
             Resources.images.put("title", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("menu/title.png"))));
+            Resources.images.put("bullet", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("bullet/Bullet.jpg"))));
+            Resources.images.put("rocket", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("bullet/rocket.jpg"))));
+            Resources.images.put("shield1", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("powerups/shield1.jpg"))));
+            Resources.images.put("shield2", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("powerups/shield2.jpg"))));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

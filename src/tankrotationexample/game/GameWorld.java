@@ -124,9 +124,18 @@ public class GameWorld extends JPanel implements Runnable {
                             Breakable bw = new Breakable(i * 30, j * 30, Resources.getImage("break1"));
                             walls.add(bw);
                         }
-                        case "4" -> {} // powerups
-                        case "5" -> {} // powerups
-                        case "6" -> {} // powerups
+                        case "4" -> {
+//                            ShieldPowerUp spu = new ShieldPowerUp( i * 30, j * 30, Resources.getImage("shield"));
+//                            this.powerUps.add(spu);
+                        } // powerups
+                        case "5" -> {
+//                            HealthPowerUp spu = new HealthPowerUp( i * 30, j * 30, Resources.getImage("health"));
+//                            this.powerUps.add(hpu);
+                        } // powerups
+                        case "6" -> {
+//                            SpeedPowerUp speed = new SpeedPowerUp( i * 30, j * 30, Resources.getImage("speed"));
+//                            this.powerUps.add(speed);
+                        } // powerups
                         case "7" -> {} // powerups
                         case "8" -> {} // powerups
                     }
