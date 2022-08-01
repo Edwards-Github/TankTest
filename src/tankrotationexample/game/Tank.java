@@ -131,11 +131,12 @@ public class Tank extends GameObject{
         if(this.shootPressed && this.coolDown >= this.fireDelay){
             this.coolDown = 0;
             (new Sound(Resources.getSound("bullet"))).playSound();
-            if(b == null){
-                b = new Bullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("bullet"));
-            }else{
-                b.setPosition(setBulletStartX(), setBulletStartY(), angle);
-            }
+            this.ammo.add(new Bullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("bullet")));
+//          if(b == null){
+//                b = new Bullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("bullet"));
+//            }else{
+//                b.setPosition(setBulletStartX(), setBulletStartY(), angle);
+//            }
         }
         this.coolDown += this.rateOfFire;
 

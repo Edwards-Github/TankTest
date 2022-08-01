@@ -31,6 +31,7 @@ public class Bullet {
 
     void update() {
         moveForwards();
+        this.hitBox.setLocation((int) this.x, (int) this.y);
     }
 
 
