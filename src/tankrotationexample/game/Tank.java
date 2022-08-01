@@ -133,7 +133,7 @@ public class Tank extends GameObject{
             this.coolDown = 0;
             (new Sound(Resources.getSound("bullet"))).playSound();
             this.ammo.add(new Bullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("bullet")));
-            Animation a = new Animation(setBulletStartX(), setBulletStartY(), Resources.getAnimation("bullet"));
+            Animation a = new Animation(setBulletStartX()-13, setBulletStartY()-10, Resources.getAnimation("bullet"));
             a.start();
             ba.add(a);
 //          if(b == null){
