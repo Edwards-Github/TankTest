@@ -42,6 +42,7 @@ public class Tank extends GameObject{
 
     Bullet b;
     List<Bullet> ammo = new ArrayList<>();
+    List<Animation> ba = new ArrayList<>();
 
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
         this.x = x;
@@ -132,6 +133,9 @@ public class Tank extends GameObject{
             this.coolDown = 0;
             (new Sound(Resources.getSound("bullet"))).playSound();
             this.ammo.add(new Bullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("bullet")));
+            Animation a = new Animation(setBulletStartX(), setBulletStartY(), Resources.getAnimation("bullet"));
+            a.start();
+            ba.add(a);
 //          if(b == null){
 //                b = new Bullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("bullet"));
 //            }else{
@@ -236,6 +240,9 @@ public class Tank extends GameObject{
 
         g2d.setColor(Color.MAGENTA);
         g2d.drawRect((int)x, (int)y, this.img.getWidth(), this.img.getHeight());
+
+        // draw animation
+        this.ba.forEach(a -> a.drawImage(g2d));
 
         // Health bar
         g2d.setColor(Color.BLUE);

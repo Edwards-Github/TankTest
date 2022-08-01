@@ -65,7 +65,7 @@ public class Resources {
     }
     public static void initAnimations(){
             try {
-                String baseName = "expl_08_%04d.png";
+                String baseName = "expl_08_%04d.jpg";
                 List<BufferedImage> temp = new ArrayList<>();
                 for(int i =0; i < 5; i++) {
                     String fName = String.format(baseName, i);
@@ -73,7 +73,7 @@ public class Resources {
                     temp.add(read(GameWorld.class.getClassLoader().getResource(fullPath)));
                 }
                 Resources.animations.put("bullet", temp);
-                baseName = "expl_08_%04d.png";
+                baseName = "expl_01_%04d.jpg";
                 temp = new ArrayList<>();
                 for(int i = 0; i < 7; i++){
                     String fName = String.format(baseName, i);
@@ -91,5 +91,6 @@ public class Resources {
     public static void loadResourceMaps() {
         Resources.initImages();
         Resources.initSounds();
+        Resources.initAnimations();
     }
 }
