@@ -34,7 +34,7 @@ public class Resources {
             Resources.images.put("break2", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("walls/break2.jpg"))));
             Resources.images.put("title", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("menu/title.png"))));
             Resources.images.put("bullet", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("bullet/Bullet.jpg"))));
-            Resources.images.put("rocket", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("bullet/rocket.jpg"))));
+            Resources.images.put("rocket", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("bullet/rocket.png"))));
             Resources.images.put("shield1", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("powerups/shield1.jpg"))));
             Resources.images.put("shield2", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("powerups/shield2.jpg"))));
         } catch (IOException e) {
@@ -65,9 +65,9 @@ public class Resources {
     }
     public static void initAnimations(){
             try {
-                String baseName = "expl_08_%04d.jpg";
+                String baseName = "expl_08_%04d.png";
                 List<BufferedImage> temp = new ArrayList<>();
-                for(int i =0; i < 5; i++) {
+                for(int i =0; i < 6; i++) {
                     String fName = String.format(baseName, i);
                     String fullPath = "animations/bullet/" + fName;
                     temp.add(read(GameWorld.class.getClassLoader().getResource(fullPath)));

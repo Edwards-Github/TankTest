@@ -17,6 +17,8 @@ import java.util.List;
 public class Tank extends GameObject{
     private float vx;
     private float vy;
+
+    private float screenX, screenY;
     private float angle;
 
     int health = 100;
@@ -28,31 +30,24 @@ public class Tank extends GameObject{
     float coolDown = 0f;
     float rateOfFire = 1f;
 
-    private BufferedImage img;
     private boolean UpPressed;
     private boolean DownPressed;
     private boolean RightPressed;
     private boolean LeftPressed;
     private boolean shootPressed;
 
-    private Rectangle hitBox;
-
-    private float screenX;
-    private float screenY;
 
     Bullet b;
     List<Bullet> ammo = new ArrayList<>();
     List<Animation> ba = new ArrayList<>();
+    List<Collidable> colliding;
 
-    Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
-        this.x = x;
-        this.y = y;
-        this.vx = vx;
-        this.vy = vy;
-        this.img = img;
-        this.angle = angle;
+    Tank(float x, float y, BufferedImage img) {
+        super(x, y,  img);
+        this.vx = 0;
+        this.vy = 0;
+        this.angle = 0;
         this.health = health;
-        this.hitBox = new Rectangle((int)x,(int)y, this.img.getWidth(), this.img.getHeight());
     }
 
     void setPosition(float x, float y){
@@ -133,14 +128,16 @@ public class Tank extends GameObject{
             this.coolDown = 0;
             (new Sound(Resources.getSound("bullet"))).playSound();
             this.ammo.add(new Bullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("bullet")));
+            colliding.addAll(ammo);
             Animation a = new Animation(setBulletStartX()-13, setBulletStartY()-10, Resources.getAnimation("bullet"));
             a.start();
             ba.add(a);
         }
         this.coolDown += this.rateOfFire;
         this.ammo.forEach(b -> b.update());
-
+//        this.ba.removeIf(a -> !a.isRunning());
         centerScreen();
+        checkCollisions();
     }
 
     private int setBulletStartX() {
@@ -221,7 +218,7 @@ public class Tank extends GameObject{
         return "x=" + x + ", y=" + y + ", angle=" + angle;
     }
 
-    void drawImage(Graphics g) {
+    public void drawImage(Graphics2D g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
         Graphics2D g2d = (Graphics2D) g;
@@ -269,5 +266,60 @@ public class Tank extends GameObject{
 
     public float getScreenY() {
         return this.screenY;
+    }
+
+    private void checkCollisions(){
+        int count = 0;
+        for (int i = 0; i < this.colliding.size(); i++) {
+            Collidable c = this.colliding.get(i);
+            if(c instanceof Wall) continue;
+            for(int j = 0; j < this.colliding.size(); j++){
+                if(j == 1) continue; // do not check collisions with self (Same object)
+                Collidable co = this.colliding.get(j);
+                if(c.getHitBox().getBounds().intersects(co.getHitBox().getBounds())){
+                    c.handleCollision(co);
+                }
+            }
+        }
+    }
+
+    private void handleCollision(Collidable object1, Collidable object2){
+        if(object1 instanceof Tank && object2 instanceof Tank){
+            // Handle tank tank collision
+            ((Tank) object1).setX(((Tank) object1).getX() - ((Tank) object2).getX());
+        } else if (object1 instanceof Tank && object2 instanceof Bullet){
+            // Handle tank1 shell collision
+            if(((Tank) object1).health - 50 != 0){
+                ((Tank) object1).health -= 50;
+            }else{
+                if(((Tank) object1).lives - 1 != 0){
+                    ((Tank) object1).lives -= 1;
+                    ((Tank) object1).health = 100;
+                }
+                else{
+                    Animation a = new Animation(setBulletStartX()-13, setBulletStartY()-10, Resources.getAnimation("nuke"));
+                    a.start();
+                    ba.add(a);
+                    object1 = null;
+                }
+            }
+            object2 = null;
+        } else if (object1 instanceof Bullet && object2 instanceof Tank) {
+            // Handle tank2 shell collision
+            if (((Tank) object2).health - 50 != 0) {
+                ((Tank) object2).health -= 50;
+            } else {
+                if (((Tank) object2).lives - 1 != 0) {
+                    ((Tank) object2).lives -= 1;
+                    ((Tank) object2).health = 100;
+                } else {
+                    Animation a = new Animation(setBulletStartX() - 13, setBulletStartY() - 10, Resources.getAnimation("nuke"));
+                    a.start();
+                    ba.add(a);
+                    object2 = null;
+                }
+            }
+            object1 = null;
+        }
     }
 }

@@ -6,20 +6,13 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-public class Bullet {
-    private float x;
-    private float y;
+public class Bullet extends GameObject{
     private float angle;
     private float R = 2f;
-    private BufferedImage img;
-    private Rectangle hitBox;
 
     Bullet(float x, float y, float angle, BufferedImage img) {
-        this.x = x;
-        this.y = y;
-        this.img = img;
+        super(x,y,img);
         this.angle = angle;
-        this.hitBox = new Rectangle((int)x,(int)y, this.img.getWidth(), this.img.getHeight());
     }
 
 
@@ -27,6 +20,11 @@ public class Bullet {
         this.x = x;
         this.y = y;
         this.angle = angle;
+    }
+
+    void setPosition(float x, float y) {
+        this.x = x;
+        this.y = y;
     }
 
     void update() {
@@ -64,19 +62,20 @@ public class Bullet {
     }
 
 
-    void drawImage(Graphics g) {
+   public void drawImage(Graphics2D g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.drawImage(this.img, rotation, null);
-        g2d.setColor(Color.RED);
-        g2d.rotate(angle);
-        g2d.drawRect((int)x,(int)y,this.img.getWidth(), this.img.getHeight());
-        g2d.rotate(-angle);
+        g.drawImage(this.img, rotation, null);
+//        g2d.setColor(Color.RED);
+//        g2d.drawRect((int)x,(int)y,this.img.getWidth(), this.img.getHeight());
     }
 
     public Rectangle getHitBox(){
         return this.hitBox.getBounds();
+    }
+
+    public void handleCollision(Collidable with){
+        this.setPosition(-30f,-30f);
     }
 }
 

@@ -37,8 +37,7 @@ public class GameWorld extends JPanel implements Runnable {
     private Tank t2;
     private Launcher lf;
     private long tick = 0;
-    List<Wall> walls = new ArrayList<>();
-//    List<PowerUp> powerUps = new ArrayList<>();
+    List<GameObject> gObjs = new ArrayList<>();
 
     /**
      * 
@@ -60,21 +59,21 @@ public class GameWorld extends JPanel implements Runnable {
                 this.t1.update(); // update tank
                 this.t2.update(); // update tank
 
-                // checking hitboxes for tank 1 against walls
-                for (int i = 0; i < walls.size(); i++) {
-                    Wall w = this.walls.get(i);
-                    if(w.getHitBox().intersects(this.t1.getHitBox())){
-                        System.out.println("t1 has hit a wall");
-                    }
-                }
-
-                // checking hitboxes for tank 2 against walls
-                for (int i = 0; i < walls.size(); i++) {
-                    Wall w = this.walls.get(i);
-                    if(w.getHitBox().intersects(this.t2.getHitBox())){
-                        System.out.println("t2 has hit a wall");
-                    }
-                }
+//                // checking hitboxes for tank 1 against walls
+//                for (int i = 0; i < walls.size(); i++) {
+//                    Wall w = this.walls.get(i);
+//                    if(w.getHitBox().intersects(this.t1.getHitBox())){
+//                        System.out.println("t1 has hit a wall");
+//                    }
+//                }
+//
+//                // checking hitboxes for tank 2 against walls
+//                for (int i = 0; i < walls.size(); i++) {
+//                    Wall w = this.walls.get(i);
+//                    if(w.getHitBox().intersects(this.t2.getHitBox())){
+//                        System.out.println("t2 has hit a wall");
+//                    }
+//                }
 
 //                // checking hitboxes for tank 1 against bullets from tank 2
                 if (this.t2.ammo.size() > 0) {
@@ -162,12 +161,14 @@ public class GameWorld extends JPanel implements Runnable {
                 GameConstants.WORLD_HEIGHT,
                 BufferedImage.TYPE_INT_RGB);
 
-        t1 = new Tank(300, 300, 0, 0, (short) 0, Resources.getImage("tank1"));
+        t1 = new Tank(300, 300, Resources.getImage("tank1"));
         TankControl tc1 = new TankControl(t1, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
-        t2 = new Tank(300, 300, 0, 0, (short) 0, Resources.getImage("tank2"));
+        t2 = new Tank(300, 300, Resources.getImage("tank2"));
         TankControl tc2 = new TankControl(t2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT, KeyEvent.VK_ENTER);
         this.lf.getJf().addKeyListener(tc1);
         this.lf.getJf().addKeyListener(tc2);
+        this.gObjs.add(t1);
+        this.gObjs.add(t2);
 
         try (BufferedReader mapReader = new BufferedReader(new InputStreamReader(GameWorld.class.getClassLoader().getResourceAsStream("maps/map1.txt")))) {
             String[] size = mapReader.readLine().split(",");
@@ -179,16 +180,13 @@ public class GameWorld extends JPanel implements Runnable {
                 for (int j = 0; j < items.length; j++) {
                     switch (items[j]) {
                         case "3", "9" -> {
-                            Wall w = new Wall(i * 30, j * 30, Resources.getImage("unbreak"));
-                            walls.add(w);
+                            this.gObjs.add(new Wall(i * 30, j * 30, Resources.getImage("unbreak")));
                         }
                         case "2" -> {
-                            Breakable bw = new Breakable(i * 30, j * 30, Resources.getImage("break1"));
-                            walls.add(bw);
+                            this.gObjs.add(new Breakable(i * 30, j * 30, Resources.getImage("break1")));
                         }
                         case "4" -> {
-//                            ShieldPowerUp spu = new ShieldPowerUp( i * 30, j * 30, Resources.getImage("shield"));
-//                            this.powerUps.add(spu);
+                            this.gObjs.add(new ShieldPowerUp( i * 30, j * 30, Resources.getImage("shield1")));
                         } // powerups
                         case "5" -> {
 //                            HealthPowerUp spu = new HealthPowerUp( i * 30, j * 30, Resources.getImage("health"));
@@ -214,13 +212,8 @@ public class GameWorld extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         Graphics2D buffer = world.createGraphics();
-        buffer.setColor(Color.BLACK);
-        buffer.fillRect(0,0, GameConstants.WORLD_WIDTH, GameConstants.WORLD_HEIGHT);
         drawFloor(buffer);
-        //this.powerUps.forEach(p -> p.drawImage(buffer));
-        this.walls.forEach(w -> w.drawImage(buffer));
-        this.t1.drawImage(buffer);
-        this.t2.drawImage(buffer);
+        this.gObjs.forEach(gobj -> gobj.drawImage(buffer));
         drawSplitScreen(g2, world);
         drawMiniMap(g2, world);
     }
