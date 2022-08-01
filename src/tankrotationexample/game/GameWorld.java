@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -79,6 +80,7 @@ public class GameWorld extends JPanel implements Runnable {
                 if (this.t2.ammo.size() > 0) {
                     for (int i = 0; i < this.t2.ammo.size(); i++) {
                         Bullet b = this.t2.ammo.get(i);
+                        b.update();
                         if (b.getHitBox().intersects(this.t1.getHitBox())) {
                             System.out.println("t1 was hit by t2 bullet");
                         }
@@ -89,6 +91,7 @@ public class GameWorld extends JPanel implements Runnable {
                 if (this.t1.ammo.size() > 0) {
                     for (int i = 0; i < this.t1.ammo.size(); i++) {
                         Bullet b = this.t1.ammo.get(i);
+                        b.update();
                         if (b.getHitBox().intersects(this.t2.getHitBox())) {
                             System.out.println("t2 was hit by a t1 bullet");
                         }
@@ -110,26 +113,30 @@ public class GameWorld extends JPanel implements Runnable {
 //                        System.out.println("t2 has hit a power up");
 //                    }
 //                }
+                while(true){
+                    tick++;
+                    this.t1.update(); // update tank
+                    this.t2.update(); // update tank
+                    this.repaint(); // redraw game
 
-                this.repaint();   // redraw game
+                    Thread.sleep(1000 / 144);
+                    //                if (this.tick >= 144 * 8) {
+//                    t.interrupt();
+//                    this.lf.setFrame("end");
+//                    return;
+//                }
+                }
                 
                 /*
                  * Sleep for 1000/144 ms (~6.9ms). This is done to have our 
                  * loop run at a fixed rate per/sec. 
                 */
-                Thread.sleep(1000 / 144);
 
                 /*
                  * simulate an end game event
                  * we will do this with by ending the game when ~8 seconds has passed.
                  * This will need to be changed since the will always close after 8 seconds
                  */
-//                if (this.tick >= 144 * 8) {
-//                    t.interrupt();
-//                    this.lf.setFrame("end");
-//                    return;
-//                }
-
             }
         } catch (InterruptedException ignored) {
             System.out.println(ignored);
@@ -166,6 +173,7 @@ public class GameWorld extends JPanel implements Runnable {
             String[] size = mapReader.readLine().split(",");
             int numberOfRows = Integer.parseInt(size[0]);
             int numberOfColumns = Integer.parseInt(size[1]);
+
             for(int i = 0; mapReader.ready(); i++){
                 String[] items = mapReader.readLine().split("");
                 for (int j = 0; j < items.length; j++) {
@@ -208,18 +216,35 @@ public class GameWorld extends JPanel implements Runnable {
         Graphics2D buffer = world.createGraphics();
         buffer.setColor(Color.BLACK);
         buffer.fillRect(0,0, GameConstants.WORLD_WIDTH, GameConstants.WORLD_HEIGHT);
-        walls.forEach(w -> w.drawImage(buffer));
-
-//        walls.removeIf(Objects::nonNull);
-
+        drawFloor(buffer);
+        //this.powerUps.forEach(p -> p.drawImage(buffer));
+        this.walls.forEach(w -> w.drawImage(buffer));
         this.t1.drawImage(buffer);
         this.t2.drawImage(buffer);
-        g2.drawImage(world, 0, 0, null);
-//        BufferedImage lh = world.getSubimage((int)t1.getX(), (int)t1.getY(), GameConstants.GAME_SCREEN_WIDTH/2, GameConstants.GAME_SCREEN_HEIGHT);
-//        g2.drawImage(lh,0,0, null);
+        drawSplitScreen(g2, world);
+        drawMiniMap(g2, world);
+    }
+
+    void drawMiniMap(Graphics2D g2, BufferedImage world){
         BufferedImage mm = world.getSubimage(0, 0, GameConstants.WORLD_WIDTH - 360, GameConstants.WORLD_HEIGHT);
-        g2.scale(.2, .2);
-        g2.drawImage(mm, 2000, 2000, null);
+        AffineTransform at = new AffineTransform();
+        at.translate(GameConstants.GAME_SCREEN_WIDTH/2f - (GameConstants.WORLD_WIDTH*.2)/2f, GameConstants.GAME_SCREEN_HEIGHT - GameConstants.WORLD_HEIGHT*.2 - 30);
+        at.scale(.2,.2);
+        g2.drawImage(mm, at, null);
+    }
+    void drawSplitScreen(Graphics2D g2, BufferedImage world){
+        BufferedImage lh = world.getSubimage((int)this.t1.getScreenX(), (int)this.t1.getScreenY(), GameConstants.GAME_SCREEN_WIDTH/2, GameConstants.GAME_SCREEN_HEIGHT);
+        BufferedImage rh = world.getSubimage((int)this.t2.getScreenX(), (int)this.t2.getScreenY(), GameConstants.GAME_SCREEN_WIDTH/2, GameConstants.GAME_SCREEN_HEIGHT);
+
+        g2.drawImage(lh,0,0,null);
+        g2.drawImage(rh, GameConstants.GAME_SCREEN_WIDTH/2,0,null);
+    }
+    void drawFloor(Graphics2D buffer){
+        for (int i = 0; i < GameConstants.WORLD_WIDTH; i+=320) {
+            for (int j = 0; j < GameConstants.WORLD_HEIGHT; j+=240) {
+                buffer.drawImage(Resources.getImage("floor"),i,j, null);
+            }
+        }
     }
 
 }

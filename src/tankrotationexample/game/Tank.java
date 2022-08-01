@@ -37,8 +37,11 @@ public class Tank extends GameObject{
 
     private Rectangle hitBox;
 
-    List<Bullet> ammo = new ArrayList<>();
+    private float screenX;
+    private float screenY;
+
     Bullet b;
+    List<Bullet> ammo = new ArrayList<>();
 
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
         this.x = x;
@@ -96,10 +99,12 @@ public class Tank extends GameObject{
     void unToggleShootPressed() {
         this.shootPressed = false;
         if(b != null){
-            b.setPosition(setBulletStartX(), setBulletStartY(), angle);
+            b.setPosition(this.setBulletStartX(), this.setBulletStartY(), angle);
             this.ammo.add(b);
             b = null;
-        }}
+        }
+    }
+
 
     public float getX() { return x; }
 
@@ -192,32 +197,31 @@ public class Tank extends GameObject{
         }
     }
 
+    private void centerScreen(){
+        this.screenX = this.x - GameConstants.GAME_SCREEN_WIDTH / 4f;
+        this.screenY = this.y - GameConstants.GAME_SCREEN_HEIGHT / 2f;
+
+        if (this.screenX < 0){
+            this.screenX = 0;
+        }
+        if (this.screenY < 0){
+            this.screenY = 0;
+        }
+
+        // keep camera still at right border
+        if (screenX > GameConstants.WORLD_WIDTH - GameConstants.GAME_SCREEN_WIDTH / 2f){
+            screenX = GameConstants.WORLD_WIDTH - GameConstants.GAME_SCREEN_WIDTH / 2f;
+        }
+
+        // keep camera still at bottom border
+        if (screenY > GameConstants.WORLD_HEIGHT - GameConstants.GAME_SCREEN_HEIGHT){
+            screenY = GameConstants.WORLD_HEIGHT - GameConstants.GAME_SCREEN_HEIGHT;
+        }
+    }
     @Override
     public String toString() {
         return "x=" + x + ", y=" + y + ", angle=" + angle;
     }
-
-//    private void center_screen() {
-//        this.screen_x = (int)this.getX() - GameConstants.GAME_SCREEN_WIDTH / 4;
-//        this.screen_y = (int)this.getY() - GameConstants.GAME_SCREEN_HEIGHT / 2;
-//
-//        if (this.screen_x < 0) {
-//            this.screen_x = 0;
-//        }
-//        if (this.screen_y < 0) {
-//            this.screen_y = 0;
-//        }
-//
-//        // keep camera still at right border
-//        if(screen_x > GameConstants.WORLD_WIDTH - GameConstants.GAME_SCREEN_WIDTH / 2) {
-//            screen_x = GameConstants.WORLD_WIDTH - GameConstants.GAME_SCREEN_WIDTH / 2;
-//        }
-//
-//        // keep camera still at bottom border
-//        if (screen_y > GameConstants.WORLD_HEIGHT - GameConstants.GAME_SCREEN_HEIGHT) {
-//            screen_y = GameConstants.WORLD_HEIGHT - GameConstants.GAME_SCREEN_HEIGHT;
-//        }
-//    }
 
     void drawImage(Graphics g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
@@ -256,5 +260,13 @@ public class Tank extends GameObject{
 
     public Rectangle getHitBox(){
         return this.hitBox.getBounds();
+    }
+
+    public float getScreenX() {
+        return this.screenX;
+    }
+
+    public float getScreenY() {
+        return this.screenY;
     }
 }

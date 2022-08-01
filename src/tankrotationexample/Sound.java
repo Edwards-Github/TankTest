@@ -27,5 +27,11 @@ public class Sound implements Runnable{
     public void run(){
         c.loop(Clip.LOOP_CONTINUOUSLY);
         this.playSound();
+        while(true){
+            if(Thread.currentThread().isInterrupted()){
+                c.stop();
+                return;
+            }
+        }
     }
 }
