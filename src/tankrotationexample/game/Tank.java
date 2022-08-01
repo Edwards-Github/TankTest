@@ -40,10 +40,9 @@ public class Tank extends GameObject{
     Bullet b;
     List<Bullet> ammo = new ArrayList<>();
     List<Animation> ba = new ArrayList<>();
-    List<Collidable> colliding;
 
     Tank(float x, float y, BufferedImage img) {
-        super(x, y,  img);
+        super(x, y, img);
         this.vx = 0;
         this.vy = 0;
         this.angle = 0;
@@ -128,7 +127,6 @@ public class Tank extends GameObject{
             this.coolDown = 0;
             (new Sound(Resources.getSound("bullet"))).playSound();
             this.ammo.add(new Bullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("bullet")));
-            colliding.addAll(ammo);
             Animation a = new Animation(setBulletStartX()-13, setBulletStartY()-10, Resources.getAnimation("bullet"));
             a.start();
             ba.add(a);
@@ -137,7 +135,6 @@ public class Tank extends GameObject{
         this.ammo.forEach(b -> b.update());
 //        this.ba.removeIf(a -> !a.isRunning());
         centerScreen();
-        checkCollisions();
     }
 
     private int setBulletStartX() {
@@ -268,58 +265,28 @@ public class Tank extends GameObject{
         return this.screenY;
     }
 
-    private void checkCollisions(){
-        int count = 0;
-        for (int i = 0; i < this.colliding.size(); i++) {
-            Collidable c = this.colliding.get(i);
-            if(c instanceof Wall) continue;
-            for(int j = 0; j < this.colliding.size(); j++){
-                if(j == 1) continue; // do not check collisions with self (Same object)
-                Collidable co = this.colliding.get(j);
-                if(c.getHitBox().getBounds().intersects(co.getHitBox().getBounds())){
-                    c.handleCollision(co);
-                }
-            }
-        }
-    }
-
-    private void handleCollision(Collidable object1, Collidable object2){
-        if(object1 instanceof Tank && object2 instanceof Tank){
-            // Handle tank tank collision
-            ((Tank) object1).setX(((Tank) object1).getX() - ((Tank) object2).getX());
-        } else if (object1 instanceof Tank && object2 instanceof Bullet){
-            // Handle tank1 shell collision
-            if(((Tank) object1).health - 50 != 0){
-                ((Tank) object1).health -= 50;
+    @Override
+    public void handleCollision(Collidable object){
+        if(object instanceof Tank){
+            // Handle tank vs tank collision
+            this.setPosition((x - this.vx),(y - this.vy));
+        } else if(object instanceof Bullet){
+            // Handle tank vs shell collision
+            if(this.health - 50 != 0){
+                this.health -= 50;
+                System.out.println("Tank vs Bullet collision");
             }else{
-                if(((Tank) object1).lives - 1 != 0){
-                    ((Tank) object1).lives -= 1;
-                    ((Tank) object1).health = 100;
+                if(this.lives - 1 != 0){
+                    this.lives -= 1;
+                    this.health = 100;
                 }
                 else{
                     Animation a = new Animation(setBulletStartX()-13, setBulletStartY()-10, Resources.getAnimation("nuke"));
                     a.start();
                     ba.add(a);
-                    object1 = null;
                 }
             }
-            object2 = null;
-        } else if (object1 instanceof Bullet && object2 instanceof Tank) {
-            // Handle tank2 shell collision
-            if (((Tank) object2).health - 50 != 0) {
-                ((Tank) object2).health -= 50;
-            } else {
-                if (((Tank) object2).lives - 1 != 0) {
-                    ((Tank) object2).lives -= 1;
-                    ((Tank) object2).health = 100;
-                } else {
-                    Animation a = new Animation(setBulletStartX() - 13, setBulletStartY() - 10, Resources.getAnimation("nuke"));
-                    a.start();
-                    ba.add(a);
-                    object2 = null;
-                }
-            }
-            object1 = null;
+            object = null;
         }
     }
 }

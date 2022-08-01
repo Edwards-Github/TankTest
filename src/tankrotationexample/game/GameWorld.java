@@ -38,6 +38,8 @@ public class GameWorld extends JPanel implements Runnable {
     private Launcher lf;
     private long tick = 0;
     List<GameObject> gObjs = new ArrayList<>();
+    List<Collidable> colliding = new ArrayList<>();
+
 
     /**
      * 
@@ -51,72 +53,15 @@ public class GameWorld extends JPanel implements Runnable {
     public void run() {
         Thread t;
         try {
-            this.resetGame();
+            //this.resetGame();
             t = new Thread(new Sound(Resources.getSound("music")));
             t.start();
             while (true) {
                 this.tick++;
                 this.t1.update(); // update tank
                 this.t2.update(); // update tank
-
-//                // checking hitboxes for tank 1 against walls
-//                for (int i = 0; i < walls.size(); i++) {
-//                    Wall w = this.walls.get(i);
-//                    if(w.getHitBox().intersects(this.t1.getHitBox())){
-//                        System.out.println("t1 has hit a wall");
-//                    }
-//                }
-//
-//                // checking hitboxes for tank 2 against walls
-//                for (int i = 0; i < walls.size(); i++) {
-//                    Wall w = this.walls.get(i);
-//                    if(w.getHitBox().intersects(this.t2.getHitBox())){
-//                        System.out.println("t2 has hit a wall");
-//                    }
-//                }
-
-//                // checking hitboxes for tank 1 against bullets from tank 2
-                if (this.t2.ammo.size() > 0) {
-                    for (int i = 0; i < this.t2.ammo.size(); i++) {
-                        Bullet b = this.t2.ammo.get(i);
-                        b.update();
-                        if (b.getHitBox().intersects(this.t1.getHitBox())) {
-                            System.out.println("t1 was hit by t2 bullet");
-                        }
-                    }
-                }
-//
-//                // checking hitboxes for tank 2 against bullets
-                if (this.t1.ammo.size() > 0) {
-                    for (int i = 0; i < this.t1.ammo.size(); i++) {
-                        Bullet b = this.t1.ammo.get(i);
-                        b.update();
-                        if (b.getHitBox().intersects(this.t2.getHitBox())) {
-                            System.out.println("t2 was hit by a t1 bullet");
-                        }
-                    }
-                }
-
-//                // checking hitboxes for tank 1
-//                for (int i = 0; i < this.powerUps.size(); i++) {
-//                    PowerUp p = this.powerUps.get(i);
-//                    if(p.getHitBox().intersects(this.t1.getHitBox())){
-//                        System.out.println("t1 has hit a power up");
-//                    }
-//                }
-//
-//                // checking hitboxes for tank 1
-//                for (int i = 0; i < this.powerUps.size(); i++) {
-//                    PowerUp p = this.powerUps.get(i);
-//                    if(p.getHitBox().intersects(this.t2.getHitBox())){
-//                        System.out.println("t2 has hit a power up");
-//                    }
-//                }
-                while(true){
-                    tick++;
-                    this.t1.update(); // update tank
-                    this.t2.update(); // update tank
-                    this.repaint(); // redraw game
+                this.checkCollisions();
+                this.repaint(); //redraw game
 
                     Thread.sleep(1000 / 144);
                     //                if (this.tick >= 144 * 8) {
@@ -136,7 +81,7 @@ public class GameWorld extends JPanel implements Runnable {
                  * we will do this with by ending the game when ~8 seconds has passed.
                  * This will need to be changed since the will always close after 8 seconds
                  */
-            }
+
         } catch (InterruptedException ignored) {
             System.out.println(ignored);
         }
@@ -163,7 +108,7 @@ public class GameWorld extends JPanel implements Runnable {
 
         t1 = new Tank(300, 300, Resources.getImage("tank1"));
         TankControl tc1 = new TankControl(t1, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
-        t2 = new Tank(300, 300, Resources.getImage("tank2"));
+        t2 = new Tank(400, 400, Resources.getImage("tank2"));
         TankControl tc2 = new TankControl(t2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT, KeyEvent.VK_ENTER);
         this.lf.getJf().addKeyListener(tc1);
         this.lf.getJf().addKeyListener(tc2);
@@ -175,18 +120,19 @@ public class GameWorld extends JPanel implements Runnable {
             int numberOfRows = Integer.parseInt(size[0]);
             int numberOfColumns = Integer.parseInt(size[1]);
 
-            for(int i = 0; mapReader.ready(); i++){
+            for(int i = 0; mapReader.ready(); i++) {
                 String[] items = mapReader.readLine().split("");
                 for (int j = 0; j < items.length; j++) {
                     switch (items[j]) {
                         case "3", "9" -> {
                             this.gObjs.add(new Wall(i * 30, j * 30, Resources.getImage("unbreak")));
+
                         }
                         case "2" -> {
                             this.gObjs.add(new Breakable(i * 30, j * 30, Resources.getImage("break1")));
                         }
                         case "4" -> {
-                            this.gObjs.add(new ShieldPowerUp( i * 30, j * 30, Resources.getImage("shield1")));
+                            this.gObjs.add(new ShieldPowerUp(i * 30, j * 30, Resources.getImage("shield1")));
                         } // powerups
                         case "5" -> {
 //                            HealthPowerUp spu = new HealthPowerUp( i * 30, j * 30, Resources.getImage("health"));
@@ -196,11 +142,15 @@ public class GameWorld extends JPanel implements Runnable {
 //                            SpeedPowerUp speed = new SpeedPowerUp( i * 30, j * 30, Resources.getImage("speed"));
 //                            this.powerUps.add(speed);
                         } // powerups
-                        case "7" -> {} // powerups
-                        case "8" -> {} // powerups
+                        case "7" -> {
+                        } // powerups
+                        case "8" -> {
+                        } // powerups
                     }
                 }
             }
+                this.colliding.addAll(this.gObjs);
+
         }catch(IOException e){
             System.out.println(e);
             System.exit(-2);
@@ -239,5 +189,19 @@ public class GameWorld extends JPanel implements Runnable {
             }
         }
     }
+    public void checkCollisions(){
+        int count = 0;
+        for (int i = 0; i < this.colliding.size(); i++) {
+            Collidable c = this.colliding.get(i);
+            if(c instanceof Wall) continue;
+            for(int j = 0; j < this.colliding.size(); j++){
+                if(j == i) continue; // do not check collisions with self (Same object)
+                Collidable co = this.colliding.get(j);
+                if(c.getHitBox().getBounds().intersects(co.getHitBox().getBounds())){
+                    c.handleCollision(co);
 
+                }
+            }
+        }
+    }
 }

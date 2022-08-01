@@ -19,17 +19,11 @@ public class GameObject implements Collidable{
     }
 
     @Override
-    public Rectangle getHitBox(){
-        return hitBox.getBounds();
+    public Rectangle getHitBox() {
+        return this.hitBox.getBounds();
     }
 
     @Override
-    public void handleCollision(Collidable with) {
-
-    }
-
-    @Override
-    public boolean isCollidable(){
-        return true;
+    public void handleCollision(Collidable obj) {
     }
 }
