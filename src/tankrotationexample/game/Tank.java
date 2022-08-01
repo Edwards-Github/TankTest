@@ -136,18 +136,11 @@ public class Tank extends GameObject{
             Animation a = new Animation(setBulletStartX()-13, setBulletStartY()-10, Resources.getAnimation("bullet"));
             a.start();
             ba.add(a);
-//          if(b == null){
-//                b = new Bullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("bullet"));
-//            }else{
-//                b.setPosition(setBulletStartX(), setBulletStartY(), angle);
-//            }
         }
         this.coolDown += this.rateOfFire;
-
-//        if(b != null){
-//            b.update();
-//        }
         this.ammo.forEach(b -> b.update());
+
+        centerScreen();
     }
 
     private int setBulletStartX() {
