@@ -198,8 +198,13 @@ public class GameWorld extends JPanel implements Runnable {
                 if(j == i) continue; // do not check collisions with self (Same object)
                 Collidable co = this.colliding.get(j);
                 if(c.getHitBox().getBounds().intersects(co.getHitBox().getBounds())){
+                    if(c instanceof Tank){
+                        System.out.println("Tank instance");
+                    }
+                    else if(c instanceof Bullet){
+                        System.out.println("Bullet instance");
+                    }
                     c.handleCollision(co);
-
                 }
             }
         }

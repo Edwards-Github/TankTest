@@ -66,16 +66,15 @@ public class Bullet extends GameObject{
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
         g.drawImage(this.img, rotation, null);
-//        g2d.setColor(Color.RED);
-//        g2d.drawRect((int)x,(int)y,this.img.getWidth(), this.img.getHeight());
+        g.setColor(Color.RED);
+        g.drawRect((int)this.hitBox.x,(int)this.hitBox.y,(int)this.hitBox.getWidth(), (int)this.hitBox.getHeight()); // draw hitbox
+//        g.setColor(Color.RED);
+//        g.drawRect((int)x,(int)y,this.img.getWidth(), this.img.getHeight());
     }
 
-    public Rectangle getHitBox(){
-        return this.hitBox.getBounds();
-    }
+    public Rectangle getHitBox(){return this.hitBox.getBounds();}
 
-    public void handleCollision(Collidable object){
-        this.setPosition(-30f,-30f);
+    public void handleCollision(Collidable object){this.setPosition(-30f,-30f);
     }
 }
 
