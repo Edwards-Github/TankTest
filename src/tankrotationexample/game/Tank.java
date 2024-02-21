@@ -224,7 +224,6 @@ public class Tank extends GameObject{
             b.drawImage(g2d);
         }
         this.ammo.forEach(b -> b.drawImage(g2d));
-
         g2d.setColor(Color.MAGENTA);
         g2d.drawRect((int)x, (int)y, this.img.getWidth(), this.img.getHeight());
 
@@ -271,10 +270,10 @@ public class Tank extends GameObject{
             // Handle tank vs tank collision
             this.setPosition((x - this.vx),(y - this.vy));
         } else if(object instanceof Bullet){
+            System.out.println("Tank vs Bullet collision");
             // Handle tank vs shell collision
             if(this.health - 50 != 0){
                 this.health -= 50;
-                System.out.println("Tank vs Bullet collision");
             }else{
                 if(this.lives - 1 != 0){
                     this.lives -= 1;

@@ -126,7 +126,6 @@ public class GameWorld extends JPanel implements Runnable {
                     switch (items[j]) {
                         case "3", "9" -> {
                             this.gObjs.add(new Wall(i * 30, j * 30, Resources.getImage("unbreak")));
-
                         }
                         case "2" -> {
                             this.gObjs.add(new Breakable(i * 30, j * 30, Resources.getImage("break1")));
@@ -198,11 +197,18 @@ public class GameWorld extends JPanel implements Runnable {
                 if(j == i) continue; // do not check collisions with self (Same object)
                 Collidable co = this.colliding.get(j);
                 if(c.getHitBox().getBounds().intersects(co.getHitBox().getBounds())){
-                    if(c instanceof Tank){
+                    if(co instanceof Tank){
+//                        if(((Tank) co).ammo.contains(ammo)){
+//                            // check if bullet is in list
+//                        }
                         System.out.println("Tank instance");
                     }
                     else if(c instanceof Bullet){
                         System.out.println("Bullet instance");
+                    }
+
+                    if(co instanceof Bullet){
+                        System.out.println("co is Bullet instance");
                     }
                     c.handleCollision(co);
                 }
