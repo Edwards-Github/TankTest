@@ -42,7 +42,6 @@ public class GameWorld extends JPanel implements Runnable {
 
 
     /**
-     * 
      * @param lf
      */
     public GameWorld(Launcher lf) {
@@ -63,24 +62,24 @@ public class GameWorld extends JPanel implements Runnable {
                 this.checkCollisions();
                 this.repaint(); //redraw game
 
-                    Thread.sleep(1000 / 144);
-                    //                if (this.tick >= 144 * 8) {
+                Thread.sleep(1000 / 144);
+                //                if (this.tick >= 144 * 8) {
 //                    t.interrupt();
 //                    this.lf.setFrame("end");
 //                    return;
 //                }
-                }
-                
-                /*
-                 * Sleep for 1000/144 ms (~6.9ms). This is done to have our 
-                 * loop run at a fixed rate per/sec. 
-                */
+            }
 
-                /*
-                 * simulate an end game event
-                 * we will do this with by ending the game when ~8 seconds has passed.
-                 * This will need to be changed since the will always close after 8 seconds
-                 */
+            /*
+             * Sleep for 1000/144 ms (~6.9ms). This is done to have our
+             * loop run at a fixed rate per/sec.
+             */
+
+            /*
+             * simulate an end game event
+             * we will do this with by ending the game when ~8 seconds has passed.
+             * This will need to be changed since the will always close after 8 seconds
+             */
 
         } catch (InterruptedException ignored) {
             System.out.println(ignored);
@@ -120,7 +119,7 @@ public class GameWorld extends JPanel implements Runnable {
             int numberOfRows = Integer.parseInt(size[0]);
             int numberOfColumns = Integer.parseInt(size[1]);
 
-            for(int i = 0; mapReader.ready(); i++) {
+            for (int i = 0; mapReader.ready(); i++) {
                 String[] items = mapReader.readLine().split("");
                 for (int j = 0; j < items.length; j++) {
                     switch (items[j]) {
@@ -148,9 +147,9 @@ public class GameWorld extends JPanel implements Runnable {
                     }
                 }
             }
-                this.colliding.addAll(this.gObjs);
+            this.colliding.addAll(this.gObjs);
 
-        }catch(IOException e){
+        } catch (IOException e) {
             System.out.println(e);
             System.exit(-2);
         }
@@ -167,27 +166,30 @@ public class GameWorld extends JPanel implements Runnable {
         drawMiniMap(g2, world);
     }
 
-    void drawMiniMap(Graphics2D g2, BufferedImage world){
+    void drawMiniMap(Graphics2D g2, BufferedImage world) {
         BufferedImage mm = world.getSubimage(0, 0, GameConstants.WORLD_WIDTH - 360, GameConstants.WORLD_HEIGHT);
         AffineTransform at = new AffineTransform();
-        at.translate(GameConstants.GAME_SCREEN_WIDTH/2f - (GameConstants.WORLD_WIDTH*.2)/2f, GameConstants.GAME_SCREEN_HEIGHT - GameConstants.WORLD_HEIGHT*.2 - 30);
-        at.scale(.2,.2);
+        at.translate(GameConstants.GAME_SCREEN_WIDTH / 2f - (GameConstants.WORLD_WIDTH * .2) / 2f, GameConstants.GAME_SCREEN_HEIGHT - GameConstants.WORLD_HEIGHT * .2 - 30);
+        at.scale(.2, .2);
         g2.drawImage(mm, at, null);
     }
-    void drawSplitScreen(Graphics2D g2, BufferedImage world){
-        BufferedImage lh = world.getSubimage((int)this.t1.getScreenX(), (int)this.t1.getScreenY(), GameConstants.GAME_SCREEN_WIDTH/2, GameConstants.GAME_SCREEN_HEIGHT);
-        BufferedImage rh = world.getSubimage((int)this.t2.getScreenX(), (int)this.t2.getScreenY(), GameConstants.GAME_SCREEN_WIDTH/2, GameConstants.GAME_SCREEN_HEIGHT);
 
-        g2.drawImage(lh,0,0,null);
-        g2.drawImage(rh, GameConstants.GAME_SCREEN_WIDTH/2,0,null);
+    void drawSplitScreen(Graphics2D g2, BufferedImage world) {
+        BufferedImage lh = world.getSubimage((int) this.t1.getScreenX(), (int) this.t1.getScreenY(), GameConstants.GAME_SCREEN_WIDTH / 2, GameConstants.GAME_SCREEN_HEIGHT);
+        BufferedImage rh = world.getSubimage((int) this.t2.getScreenX(), (int) this.t2.getScreenY(), GameConstants.GAME_SCREEN_WIDTH / 2, GameConstants.GAME_SCREEN_HEIGHT);
+
+        g2.drawImage(lh, 0, 0, null);
+        g2.drawImage(rh, GameConstants.GAME_SCREEN_WIDTH / 2, 0, null);
     }
-    void drawFloor(Graphics2D buffer){
-        for (int i = 0; i < GameConstants.WORLD_WIDTH; i+=320) {
-            for (int j = 0; j < GameConstants.WORLD_HEIGHT; j+=240) {
-                buffer.drawImage(Resources.getImage("floor"),i,j, null);
+
+    void drawFloor(Graphics2D buffer) {
+        for (int i = 0; i < GameConstants.WORLD_WIDTH; i += 320) {
+            for (int j = 0; j < GameConstants.WORLD_HEIGHT; j += 240) {
+                buffer.drawImage(Resources.getImage("floor"), i, j, null);
             }
         }
     }
+
     public void checkCollisions() {
         int count = 0;
         // adds bullets to colliding list and makes bullet collision work, but lags really hard
@@ -212,10 +214,24 @@ public class GameWorld extends JPanel implements Runnable {
                         System.out.println("co is a wall");
                     }
 
-                    if (c instanceof Bullet) {
-                        System.out.println("co is a Bullet");
+                    if (c instanceof Tank && co instanceof Bullet) {
+                        if (((Tank) c).ammo.contains(co)) {
+                            continue;
+                        }
+                        else{
+                            c.handleCollision(co);
+                        }
                     }
-                    c.handleCollision(co);
+
+                    if (co instanceof Tank && c instanceof Bullet) {
+                        if (((Tank) co).ammo.contains(c)) {
+                            continue;
+                        }
+                        else{
+                            c.handleCollision(co);
+                        }
+                        c.handleCollision(co);
+                    }
                 }
             }
         }
