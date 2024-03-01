@@ -188,23 +188,33 @@ public class GameWorld extends JPanel implements Runnable {
             }
         }
     }
-    public void checkCollisions(){
+    public void checkCollisions() {
         int count = 0;
+        // adds bullets to colliding list and makes bullet collision work, but lags really hard
+        this.colliding.addAll(t1.ammo);
+        this.colliding.addAll(t2.ammo);
         for (int i = 0; i < this.colliding.size(); i++) {
             Collidable c = this.colliding.get(i);
-            if(c instanceof Wall) continue;
-            for(int j = 0; j < this.colliding.size(); j++){
-                if(j == i) continue; // do not check collisions with self (Same object)
+            if (c instanceof Wall) continue;
+            for (int j = 0; j < this.colliding.size(); j++) {
+                if (j == i) continue; // do not check collisions with self (Same object)
                 Collidable co = this.colliding.get(j);
-                if(c.getHitBox().getBounds().intersects(co.getHitBox().getBounds())){
-                    if(((Tank)co).ammo.contains(co)){
-                        System.out.println("Bullet instance");
-//                        if(((Tank) co).ammo.contains(ammo)){
-//                            // check if bullet is in list
-//                        }
-                        System.out.println("Tank instance");
+                if (c.getHitBox().getBounds().intersects(co.getHitBox().getBounds())) {
+                    if (c instanceof Tank) {
+                        System.out.println("c is a tank");
                     }
 
+                    if (co instanceof Tank) {
+                        System.out.println("co is a tank");
+                    }
+
+                    if (co instanceof Wall) {
+                        System.out.println("co is a wall");
+                    }
+
+                    if (c instanceof Bullet) {
+                        System.out.println("co is a Bullet");
+                    }
                     c.handleCollision(co);
                 }
             }
