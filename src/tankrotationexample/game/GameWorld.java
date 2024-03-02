@@ -235,5 +235,8 @@ public class GameWorld extends JPanel implements Runnable {
                 }
             }
         }
+        // removes ammo list after checking for collision also removed lag
+        this.colliding.removeAll(t1.ammo);
+        this.colliding.removeAll(t2.ammo);
     }
 }
