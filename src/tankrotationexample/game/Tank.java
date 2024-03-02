@@ -278,12 +278,19 @@ public class Tank extends GameObject{
                     this.lives -= 1;
                     this.health = 100;
                 }
-                else{
-                    Animation a = new Animation(setBulletStartX()-13, setBulletStartY()-10, Resources.getAnimation("nuke"));
-                    a.start();
-                    ba.add(a);
+                else{ // when life is 0
+                    this.health -= 50;
+                    if(health == 0){
+                        this.lives -= 1;
+                        Animation a = new Animation(setBulletStartX()-55, setBulletStartY()-35, Resources.getAnimation("nuke"));
+                        a.start();
+                        ba.add(a);
+                    }
                 }
             }
+            ((Bullet) object).x = 0;
+            ((Bullet) object).y = 0;
+            ((Bullet) object).setBulletVelocityToZero();
             object = null;
         } else if(object instanceof Wall){
             this.setPosition((x - this.vx),(y - this.vy));

@@ -74,7 +74,8 @@ public class Bullet extends GameObject{
 
     public Rectangle getHitBox(){return this.hitBox.getBounds();}
 
-    public void handleCollision(Collidable object){this.setPosition(-30f,-30f);
-    }
+    public void handleCollision(Collidable object){this.setPosition(-30f,-30f);}
+
+    public void setBulletVelocityToZero(){this.R = 0;}
 }
 
