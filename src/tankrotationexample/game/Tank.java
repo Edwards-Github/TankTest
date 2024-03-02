@@ -282,7 +282,8 @@ public class Tank extends GameObject{
                     this.health -= 50;
                     if(health == 0){
                         this.lives -= 1;
-                        Animation a = new Animation(setBulletStartX()-55, setBulletStartY()-35, Resources.getAnimation("nuke"));
+                        Animation a = new Animation(this.x, this.y, Resources.getAnimation("nuke"));
+                        //Animation a = new Animation(setBulletStartX()-55, setBulletStartY()-35, Resources.getAnimation("nuke"));
                         a.start();
                         ba.add(a);
                     }
