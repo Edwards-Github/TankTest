@@ -288,27 +288,28 @@ public class Tank extends GameObject {
         if (object instanceof Bullet) { // for some reason there's two bullets per image so -25 actually does 50 damage
             if (this.health != 0 && this.lives != 0) {
                 this.health -= 25;
-                if(this.health == 0){
+                if (this.health == 0) {
                     this.lives -= 1;
                     this.health = 100;
                 }
-            }
-            else{
+            } else {
                 this.health -= 25;
-                if(this.health == 0){
+                if (this.health == 0) {
                     this.lives -= 1;
                     Animation a = new Animation(this.x, this.y, Resources.getAnimation("nuke"));
                     a.start();
                     ba.add(a);
                 }
             }
+            ((Bullet) object).x = 0;
+            ((Bullet) object).y = 0;
+            ((Bullet) object).setBulletVelocityToZero();
+            object = null;
         }
-        ((Bullet) object).x = 0;
-        ((Bullet) object).y = 0;
-        ((Bullet) object).setBulletVelocityToZero();
-        object = null;
+
+        // Handle tank vs Wall collision
+        if (object instanceof Wall) {
+            this.setPosition((x - this.vx), (y - this.vy));
         }
-//            if (object instanceof Wall) {
-//                this.setPosition((x - this.vx), (y - this.vy));
-//            }
+    }
 }
