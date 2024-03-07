@@ -284,6 +284,11 @@ public class Tank extends GameObject {
             this.setPosition((x - this.vx), (y - this.vy));
         }
 
+        // Handle tank vs Wall collision
+        if (object instanceof Wall) {
+            this.setPosition((x - this.vx), (y - this.vy));
+        }
+
         // Handle tank vs shell collision
         if (object instanceof Bullet) { // for some reason there's two bullets per image so -25 actually does 50 damage
             if (this.health != 0 && this.lives != 0) {
@@ -305,11 +310,6 @@ public class Tank extends GameObject {
             ((Bullet) object).y = 0;
             ((Bullet) object).setBulletVelocityToZero();
             object = null;
-        }
-
-        // Handle tank vs Wall collision
-        if (object instanceof Wall) {
-            this.setPosition((x - this.vx), (y - this.vy));
         }
     }
 }

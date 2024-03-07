@@ -73,7 +73,7 @@ public class Resources {
                     temp.add(read(GameWorld.class.getClassLoader().getResource(fullPath)));
                 }
                 Resources.animations.put("bullet", temp);
-                baseName = "expl_01_%04d.jpg";
+                baseName = "expl_01_%04d.png";
                 temp = new ArrayList<>();
                 for(int i = 0; i < 7; i++){
                     String fName = String.format(baseName, i);
