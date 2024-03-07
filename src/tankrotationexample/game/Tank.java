@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author anthony-pc
  */
-public class Tank extends GameObject{
+public class Tank extends GameObject {
     private float vx;
     private float vy;
 
@@ -49,15 +49,19 @@ public class Tank extends GameObject{
         this.health = health;
     }
 
-    void setPosition(float x, float y){
+    void setPosition(float x, float y) {
         this.x = x;
         this.y = y;
-        this.hitBox.setLocation((int)x, (int)y);
+        this.hitBox.setLocation((int) x, (int) y);
     }
 
-    void setX(float x){ this.x = x; }
+    void setX(float x) {
+        this.x = x;
+    }
 
-    void setY(float y) { this. y = y;}
+    void setY(float y) {
+        this.y = y;
+    }
 
     void toggleUpPressed() {
         this.UpPressed = true;
@@ -75,7 +79,9 @@ public class Tank extends GameObject{
         this.LeftPressed = true;
     }
 
-    void toggleShootPressed() { this.shootPressed = true; }
+    void toggleShootPressed() {
+        this.shootPressed = true;
+    }
 
     void unToggleUpPressed() {
         this.UpPressed = false;
@@ -89,11 +95,13 @@ public class Tank extends GameObject{
         this.RightPressed = false;
     }
 
-    void unToggleLeftPressed() { this.LeftPressed = false; }
+    void unToggleLeftPressed() {
+        this.LeftPressed = false;
+    }
 
     void unToggleShootPressed() {
         this.shootPressed = false;
-        if(b != null){
+        if (b != null) {
             b.setPosition(this.setBulletStartX(), this.setBulletStartY(), angle);
             this.ammo.add(b);
             b = null;
@@ -101,9 +109,13 @@ public class Tank extends GameObject{
     }
 
 
-    public float getX() { return x; }
+    public float getX() {
+        return x;
+    }
 
-    public float getY() { return y; }
+    public float getY() {
+        return y;
+    }
 
 
     void update() {
@@ -123,11 +135,11 @@ public class Tank extends GameObject{
             this.rotateRight();
         }
 
-        if(this.shootPressed && this.coolDown >= this.fireDelay){
+        if (this.shootPressed && this.coolDown >= this.fireDelay) {
             this.coolDown = 0;
             (new Sound(Resources.getSound("bullet"))).playSound();
             this.ammo.add(new Bullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("bullet")));
-            Animation a = new Animation(setBulletStartX()-13, setBulletStartY()-10, Resources.getAnimation("bullet"));
+            Animation a = new Animation(setBulletStartX() - 13, setBulletStartY() - 10, Resources.getAnimation("bullet"));
             a.start();
             ba.add(a);
         }
@@ -138,13 +150,13 @@ public class Tank extends GameObject{
     }
 
     private int setBulletStartX() {
-        float cx = 29f*(float)Math.cos(Math.toRadians(angle));
-        return (int)x+this.img.getWidth()/2 + (int)cx-4;
+        float cx = 29f * (float) Math.cos(Math.toRadians(angle));
+        return (int) x + this.img.getWidth() / 2 + (int) cx - 4;
     }
 
     private int setBulletStartY() {
-        float cy = 29f*(float)Math.sin(Math.toRadians(angle));
-        return (int)y+this.img.getHeight()/2 + (int)cy-4;
+        float cy = 29f * (float) Math.sin(Math.toRadians(angle));
+        return (int) y + this.img.getHeight() / 2 + (int) cy - 4;
     }
 
     private void rotateLeft() {
@@ -156,12 +168,12 @@ public class Tank extends GameObject{
     }
 
     private void moveBackwards() {
-        vx =  Math.round(R * Math.cos(Math.toRadians(angle)));
-        vy =  Math.round(R * Math.sin(Math.toRadians(angle)));
+        vx = Math.round(R * Math.cos(Math.toRadians(angle)));
+        vy = Math.round(R * Math.sin(Math.toRadians(angle)));
         x -= vx;
         y -= vy;
-       checkBorder();
-        this.hitBox.setLocation((int)x, (int)y);
+        checkBorder();
+        this.hitBox.setLocation((int) x, (int) y);
     }
 
     private void moveForwards() {
@@ -170,7 +182,7 @@ public class Tank extends GameObject{
         x += vx;
         y += vy;
         checkBorder();
-        this.hitBox.setLocation((int)x, (int)y);
+        this.hitBox.setLocation((int) x, (int) y);
     }
 
 
@@ -189,27 +201,28 @@ public class Tank extends GameObject{
         }
     }
 
-    private void centerScreen(){
+    private void centerScreen() {
         this.screenX = this.x - GameConstants.GAME_SCREEN_WIDTH / 4f;
         this.screenY = this.y - GameConstants.GAME_SCREEN_HEIGHT / 2f;
 
-        if (this.screenX < 0){
+        if (this.screenX < 0) {
             this.screenX = 0;
         }
-        if (this.screenY < 0){
+        if (this.screenY < 0) {
             this.screenY = 0;
         }
 
         // keep camera still at right border
-        if (screenX > GameConstants.WORLD_WIDTH - GameConstants.GAME_SCREEN_WIDTH / 2f){
+        if (screenX > GameConstants.WORLD_WIDTH - GameConstants.GAME_SCREEN_WIDTH / 2f) {
             screenX = GameConstants.WORLD_WIDTH - GameConstants.GAME_SCREEN_WIDTH / 2f;
         }
 
         // keep camera still at bottom border
-        if (screenY > GameConstants.WORLD_HEIGHT - GameConstants.GAME_SCREEN_HEIGHT){
+        if (screenY > GameConstants.WORLD_HEIGHT - GameConstants.GAME_SCREEN_HEIGHT) {
             screenY = GameConstants.WORLD_HEIGHT - GameConstants.GAME_SCREEN_HEIGHT;
         }
     }
+
     @Override
     public String toString() {
         return "x=" + x + ", y=" + y + ", angle=" + angle;
@@ -220,29 +233,29 @@ public class Tank extends GameObject{
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.img, rotation, null);
-        if(b != null){
+        if (b != null) {
             b.drawImage(g2d);
         }
         this.ammo.forEach(b -> b.drawImage(g2d));
         g2d.setColor(Color.MAGENTA);
-        g2d.drawRect((int)x, (int)y, this.img.getWidth(), this.img.getHeight());
+        g2d.drawRect((int) x, (int) y, this.img.getWidth(), this.img.getHeight());
 
         // draw animation
         this.ba.forEach(a -> a.drawImage(g2d));
 
         // Health bar
         g2d.setColor(Color.BLUE);
-        g2d.drawRect((int)x,(int)y - 30, 100, 25);
+        g2d.drawRect((int) x, (int) y - 30, 100, 25);
         // set color of health bar
-        if(this.health >= 70){
+        if (this.health >= 70) {
             g2d.setColor(Color.GREEN);
-        }else if(this.health >= 50){
+        } else if (this.health >= 50) {
             g2d.setColor(Color.YELLOW);
-        }else{
+        } else {
             g2d.setColor(Color.RED);
         }
-        g2d.fillRect((int)x,(int)y - 30, health, 25);
-        g2d.drawString("" + this.health, (int)x, (int)y-35);
+        g2d.fillRect((int) x, (int) y - 30, health, 25);
+        g2d.drawString("" + this.health, (int) x, (int) y - 35);
 
         // Lives
         for (int i = 0; i < this.lives; i++) {
@@ -252,7 +265,7 @@ public class Tank extends GameObject{
         }
     }
 
-    public Rectangle getHitBox(){
+    public Rectangle getHitBox() {
         return this.hitBox.getBounds();
     }
 
@@ -265,36 +278,37 @@ public class Tank extends GameObject{
     }
 
     @Override
-    public void handleCollision(Collidable object){
-        if(object instanceof Tank){
+    public void handleCollision(Collidable object) {
+        if (object instanceof Tank) {
             // Handle tank vs tank collision
-            this.setPosition((x - this.vx),(y - this.vy));
-        } else if(object instanceof Bullet){
-            // Handle tank vs shell collision
-            if(this.health - 50 != 0){
-                this.health -= 50;
-            }else{
-                if(this.lives - 1 != 0){
+            this.setPosition((x - this.vx), (y - this.vy));
+        }
+
+        // Handle tank vs shell collision
+        if (object instanceof Bullet) { // for some reason there's two bullets per image so -25 actually does 50 damage
+            if (this.health != 0 && this.lives != 0) {
+                this.health -= 25;
+                if(this.health == 0){
                     this.lives -= 1;
                     this.health = 100;
                 }
-                else{ // when life is 0
-                    this.health -= 50;
-                    if(health == 0){
-                        this.lives -= 1;
-                        Animation a = new Animation(this.x, this.y, Resources.getAnimation("nuke"));
-                        //Animation a = new Animation(setBulletStartX()-55, setBulletStartY()-35, Resources.getAnimation("nuke"));
-                        a.start();
-                        ba.add(a);
-                    }
+            }
+            else{
+                this.health -= 25;
+                if(this.health == 0){
+                    this.lives -= 1;
+                    Animation a = new Animation(this.x, this.y, Resources.getAnimation("nuke"));
+                    a.start();
+                    ba.add(a);
                 }
             }
-            ((Bullet) object).x = 0;
-            ((Bullet) object).y = 0;
-            ((Bullet) object).setBulletVelocityToZero();
-            object = null;
-        } else if(object instanceof Wall){
-            this.setPosition((x - this.vx),(y - this.vy));
         }
-    }
+        ((Bullet) object).x = 0;
+        ((Bullet) object).y = 0;
+        ((Bullet) object).setBulletVelocityToZero();
+        object = null;
+        }
+//            if (object instanceof Wall) {
+//                this.setPosition((x - this.vx), (y - this.vy));
+//            }
 }

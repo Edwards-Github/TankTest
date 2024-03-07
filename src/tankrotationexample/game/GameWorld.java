@@ -61,9 +61,13 @@ public class GameWorld extends JPanel implements Runnable {
                 this.t2.update(); // update tank
                 this.checkCollisions();
                 this.repaint(); //redraw game
-
                 Thread.sleep(1000 / 144);
-                //                if (this.tick >= 144 * 8) {
+                if((this.t1.lives == 0 && this.t1.health == 0) || (this.t2.lives == 0 && this.t2.health == 0)){
+                    t.interrupt();
+                    this.lf.setFrame("end");
+                    return;
+                }
+//                if (this.tick >= 144 * 8) {
 //                    t.interrupt();
 //                    this.lf.setFrame("end");
 //                    return;
@@ -78,7 +82,7 @@ public class GameWorld extends JPanel implements Runnable {
             /*
              * simulate an end game event
              * we will do this with by ending the game when ~8 seconds has passed.
-             * This will need to be changed since the will always close after 8 seconds
+             * This will need to be changed since they will always close after 8 seconds
              */
 
         } catch (InterruptedException ignored) {
@@ -192,7 +196,7 @@ public class GameWorld extends JPanel implements Runnable {
 
     public void checkCollisions() {
         int count = 0;
-        // adds bullets to colliding list and makes bullet collision work, but lags really hard
+        // add bullets to colliding list and makes bullet collision work, but lags really hard
         this.colliding.addAll(t1.ammo);
         this.colliding.addAll(t2.ammo);
         for (int i = 0; i < this.colliding.size(); i++) {
