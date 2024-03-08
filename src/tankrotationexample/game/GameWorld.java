@@ -25,6 +25,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author anthony-pc
@@ -39,6 +41,7 @@ public class GameWorld extends JPanel implements Runnable {
     private long tick = 0;
     List<GameObject> gObjs = new ArrayList<>();
     List<Collidable> colliding = new ArrayList<>();
+    private Timer timer = new Timer();
 
     /**
      * @param lf
@@ -61,14 +64,25 @@ public class GameWorld extends JPanel implements Runnable {
                 this.checkCollisions();
                 this.repaint(); //redraw game
                 Thread.sleep(1000 / 144);
-                if(this.t2.lives < 0 && this.t2.health <= 0){
-                    Thread.sleep(1000 / 144);
-                    System.out.println("this.tick: " + this.tick);
-                    if (this.tick >= 1070) { // 144 * 8
-                        t.interrupt();
-                        this.lf.setFrame("end");
-                        return;
-                    }
+
+                if((this.t1.lives < 0 && this.t1.health <= 0) || (this.t2.lives < 0 && this.t2.health <= 0)){
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run(){
+                            t.interrupt();
+                            lf.setFrame("end");
+                        }
+                    }, 2000);
+//                    Thread.sleep(2000 / 144);
+//                    System.out.println("this.tick: " + this.tick);
+//                    t.interrupt();
+//                    this.lf.setFrame("end");
+                    return;
+//                    if (this.tick >= 2000) { // 144 * 8
+//                        t.interrupt();
+//                        this.lf.setFrame("end");
+//                        return;
+//                    }
                 }
             }
 
