@@ -40,7 +40,6 @@ public class GameWorld extends JPanel implements Runnable {
     List<GameObject> gObjs = new ArrayList<>();
     List<Collidable> colliding = new ArrayList<>();
 
-
     /**
      * @param lf
      */
@@ -62,15 +61,14 @@ public class GameWorld extends JPanel implements Runnable {
                 this.checkCollisions();
                 this.repaint(); //redraw game
                 Thread.sleep(1000 / 144);
-//                if((this.t1.lives == 0 && this.t1.health == 0) || (this.t2.lives == 0 && this.t2.health == 0)){
-//                    t.interrupt();
-//                    this.lf.setFrame("end");
-//                    return;
-//                }
-                if (this.tick >= 144 * 8) {
-                    t.interrupt();
-                    this.lf.setFrame("end");
-                    return;
+                if(this.t2.lives < 0 && this.t2.health <= 0){
+                    Thread.sleep(1000 / 144);
+                    System.out.println("this.tick: " + this.tick);
+                    if (this.tick >= 1070) { // 144 * 8
+                        t.interrupt();
+                        this.lf.setFrame("end");
+                        return;
+                    }
                 }
             }
 
