@@ -73,11 +73,10 @@ public class GameWorld extends JPanel implements Runnable {
                             lf.setFrame("end");
                         }
                     }, 2000);
+                    return;
 //                    Thread.sleep(2000 / 144);
-//                    System.out.println("this.tick: " + this.tick);
 //                    t.interrupt();
 //                    this.lf.setFrame("end");
-                    return;
 //                    if (this.tick >= 2000) { // 144 * 8
 //                        t.interrupt();
 //                        this.lf.setFrame("end");
@@ -213,11 +212,18 @@ public class GameWorld extends JPanel implements Runnable {
         this.colliding.addAll(t2.ammo);
         for (int i = 0; i < this.colliding.size(); i++) {
             Collidable c = this.colliding.get(i);
-            if (c instanceof Wall) continue;
             for (int j = 0; j < this.colliding.size(); j++) {
                 if (j == i) continue; // do not check collisions with self (Same object)
                 Collidable co = this.colliding.get(j);
+
                 if (c.getHitBox().getBounds().intersects(co.getHitBox().getBounds())) {
+                    // check wall and bullet collision
+//                    if ((c instanceof Bullet && co instanceof Breakable) || c instanceof Breakable && co instanceof Bullet){
+//                        ((Breakable) co).destroyed = true;
+//                        System.out.println("c: " + c + " co: " + co);
+//                        c.handleCollision(co);
+//                    }
+
                     // check bullet collisions
                     if (c instanceof Tank && co instanceof Bullet) {
                         if (((Tank) c).ammo.contains(co)) {

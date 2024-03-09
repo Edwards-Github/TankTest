@@ -16,7 +16,5 @@ public class Wall extends GameObject implements Collidable{
     }
 
     @Override
-    public void handleCollision(Collidable object) {
-        System.out.println("obj1 collided with obj2");
-    }
+    public void handleCollision(Collidable object) {}
 }
