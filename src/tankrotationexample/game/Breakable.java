@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Breakable extends Wall {
-    private int life = 2;
+    int life = 2;
 
     public Breakable(float y, float x, BufferedImage img) {
         super(y, x, img);
@@ -20,10 +20,10 @@ public class Breakable extends Wall {
                 this.life -= 1;
             }
             else{
-                System.out.println("Else statement");
                 this.img = null;
-                this.x = 0;
-                this.y = 0;
+                // this.hitBox = null;
+                this.x = -30;
+                this.y = -30;
             }
         }
     }

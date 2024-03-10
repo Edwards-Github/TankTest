@@ -218,8 +218,14 @@ public class GameWorld extends JPanel implements Runnable {
 
                 if (c.getHitBox().getBounds().intersects(co.getHitBox().getBounds())) {
                     // check wall and bullet collision
-                    // if ((c instanceof Bullet && co instanceof Breakable) || c instanceof Breakable && co instanceof Bullet){
                     if ((c instanceof Bullet && co instanceof Breakable) || (c instanceof Breakable && co instanceof Bullet)){
+//                        if(c instanceof Breakable && ((Breakable) c).life == 0){
+//                            ((Breakable) c).hitBox = null;
+//                        }
+//                        else if(co instanceof Breakable && ((Breakable) co).life == 0){
+//                            ((Breakable) co).hitBox = null;
+//                        }
+
                         c.handleCollision(co);
                     }
 
