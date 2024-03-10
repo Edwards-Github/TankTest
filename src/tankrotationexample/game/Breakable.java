@@ -8,20 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Breakable extends Wall {
-    private int life = 4;
-    boolean destroyed = false;
+    private int life = 2;
 
     public Breakable(float y, float x, BufferedImage img) {
         super(y, x, img);
     }
 
     public void handleCollision(Collidable object) {
-        if (object instanceof Bullet && !destroyed) {
+        if (object instanceof Bullet) {
             if (this.life != 0) {
                 this.life -= 1;
             }
             else{
-                this.destroyed = true;
+                System.out.println("Else statement");
                 this.img = null;
                 this.x = 0;
                 this.y = 0;
