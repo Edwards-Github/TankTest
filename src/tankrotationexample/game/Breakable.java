@@ -24,6 +24,8 @@ public class Breakable extends Wall {
                 // this.hitBox = null;
                 this.x = -30;
                 this.y = -30;
+                this.hitBox.x = -30;
+                this.hitBox.y = -30;
             }
         }
     }
