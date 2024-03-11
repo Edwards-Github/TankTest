@@ -8,10 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Breakable extends Wall {
-    int life = 2;
+    int life = 4;
 
     public Breakable(float y, float x, BufferedImage img) {
         super(y, x, img);
+    }
+
+    void setPosition(float x, float y) {
+        this.x = x;
+        this.y = y;
     }
 
     public void handleCollision(Collidable object) {
@@ -21,11 +26,8 @@ public class Breakable extends Wall {
             }
             else{
                 this.img = null;
-                // this.hitBox = null;
-                this.x = -30;
-                this.y = -30;
-                this.hitBox.x = -30;
-                this.hitBox.y = -30;
+                this.setPosition(-100f, -100f);
+                this.hitBox.setLocation(-100,-100);
             }
         }
     }
