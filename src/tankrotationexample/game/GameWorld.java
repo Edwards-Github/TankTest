@@ -11,7 +11,6 @@ import tankrotationexample.Launcher;
 import tankrotationexample.Resources;
 import tankrotationexample.Sound;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -20,9 +19,6 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -145,7 +141,15 @@ public class GameWorld extends JPanel implements Runnable {
                             this.gObjs.add(new Breakable(i * 30, j * 30, Resources.getImage("break1")));
                         }
                         case "4" -> {
-                            this.gObjs.add(new ShieldPowerUp(i * 30, j * 30, Resources.getImage("shield1")));
+                            // resize the healthpacks
+                            BufferedImage originalImage = Resources.getImage("HealthPack");
+                            int newWidth = originalImage.getWidth()/4;
+                            int newHeight = originalImage.getHeight()/4;
+                            BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, originalImage.getType());
+                            Graphics2D g2d = resizedImage.createGraphics();
+                            g2d.drawImage(originalImage, 0, 0, newWidth, newHeight, null);
+                            g2d.dispose();
+                            this.gObjs.add(new HealthPack(i * 30, j * 30, resizedImage));
                         } // powerups
                         case "5" -> {
 //                            HealthPowerUp spu = new HealthPowerUp( i * 30, j * 30, Resources.getImage("health"));
@@ -239,6 +243,10 @@ public class GameWorld extends JPanel implements Runnable {
                         else{
                             c.handleCollision(co);
                         }
+                    }
+
+                    if((c instanceof HealthPack && co instanceof Tank) || (co instanceof HealthPack && c instanceof Tank)){
+                        c.handleCollision(co);
                     }
                     c.handleCollision(co);
                 }
