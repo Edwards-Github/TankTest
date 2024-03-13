@@ -143,6 +143,7 @@ public class Tank extends GameObject {
             a.start();
             ba.add(a);
         }
+
         this.coolDown += this.rateOfFire;
         this.ammo.forEach(b -> b.update());
 //        this.ba.removeIf(a -> !a.isRunning());
@@ -290,26 +291,20 @@ public class Tank extends GameObject {
         }
 
         // Handle tank vs shell collision
-        if (object instanceof Bullet) { // for some reason there's two bullets per image so -25 actually does 50 damage
-            if (this.health != 0 && this.lives != 0) {
-                this.health -= 25;
-                if (this.health == 0) {
-                    this.lives -= 1;
-                    this.health = 100;
-                }
-            } else {
-                this.health -= 25;
-                if (this.health == 0) {
-                    this.lives -= 1;
-                    Animation a = new Animation(this.x, this.y, Resources.getAnimation("nuke"));
-                    a.start();
-                    ba.add(a);
-                }
-            }
-            ((Bullet) object).x = 0;
-            ((Bullet) object).y = 0;
-            ((Bullet) object).setBulletVelocityToZero();
-            object = null;
+        if (this.health == 0 && this.lives != 0) {
+            this.health = 100;
+            this.lives -= 1;
         }
+
+        if (this.health == 0 && this.lives == 0) {
+            this.lives -= 1;
+            Animation a = new Animation(this.x, this.y, Resources.getAnimation("nuke"));
+            a.start();
+            ba.add(a);
+        }
+        ((Bullet) object).x = 0;
+        ((Bullet) object).y = 0;
+        ((Bullet) object).setBulletVelocityToZero();
+        object = null;
     }
 }
