@@ -21,6 +21,14 @@ public class Breakable extends Wall {
         this.y = y;
     }
 
+    void update(){
+        if(this.life == 0){
+            this.img = null;
+            this.setPosition(-100f, -100f);
+            this.hitBox.setLocation(-100,-100);
+        }
+    }
+
     public void drawImage(Graphics2D g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         // rotation.rotate(this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
@@ -36,11 +44,11 @@ public class Breakable extends Wall {
             if (this.life != 0) {
                 this.life -= 1;
             }
-            else{
-                this.img = null;
-                this.setPosition(-100f, -100f);
-                this.hitBox.setLocation(-100,-100);
-            }
+//            else{
+//                this.img = null;
+//                this.setPosition(-100f, -100f);
+//                this.hitBox.setLocation(-100,-100);
+//            }
         }
     }
 }

@@ -224,6 +224,11 @@ public class GameWorld extends JPanel implements Runnable {
                     // check wall and bullet collision
                     if ((c instanceof Bullet && co instanceof Breakable) || (c instanceof Breakable && co instanceof Bullet)){
                         c.handleCollision(co);
+                        if(c instanceof Breakable){
+                            ((Breakable) c).update();
+                        }
+                        else
+                            ((Breakable) co).update();
                     }
 
                     // check bullet and tank collisions
