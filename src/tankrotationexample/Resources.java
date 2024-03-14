@@ -38,6 +38,8 @@ public class Resources {
             Resources.images.put("shield1", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("powerups/shield1.jpg"))));
             Resources.images.put("shield2", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("powerups/shield2.jpg"))));
             Resources.images.put("HealthPack", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("powerups/HealthPack.png"))));
+            Resources.images.put("BulletPowerUp", read(Objects.requireNonNull(GameWorld.class.getClassLoader().getResource("powerups/BulletPowerUp.png"))));
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

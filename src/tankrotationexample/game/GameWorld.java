@@ -152,6 +152,14 @@ public class GameWorld extends JPanel implements Runnable {
                             this.gObjs.add(new HealthPack(i * 30, j * 30, resizedImage));
                         } // powerups
                         case "5" -> {
+                            BufferedImage originalImage = Resources.getImage("BulletPowerUp");
+                            int newWidth = originalImage.getWidth()/6;
+                            int newHeight = originalImage.getHeight()/6;
+                            BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, originalImage.getType());
+                            Graphics2D g2d = resizedImage.createGraphics();
+                            g2d.drawImage(originalImage, 0, 0, newWidth, newHeight, null);
+                            g2d.dispose();
+                            this.gObjs.add(new BulletPowerUp(i * 30, j * 30, resizedImage));
 //                            HealthPowerUp spu = new HealthPowerUp( i * 30, j * 30, Resources.getImage("health"));
 //                            this.powerUps.add(hpu);
                         } // powerups
@@ -251,6 +259,10 @@ public class GameWorld extends JPanel implements Runnable {
                     }
 
                     if((c instanceof HealthPack && co instanceof Tank) || (co instanceof HealthPack && c instanceof Tank)){
+                        c.handleCollision(co);
+                    }
+
+                    if((c instanceof BulletPowerUp && co instanceof Tank) || (co instanceof BulletPowerUp && c instanceof Tank)){
                         c.handleCollision(co);
                     }
                     c.handleCollision(co);

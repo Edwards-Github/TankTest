@@ -302,9 +302,5 @@ public class Tank extends GameObject {
             a.start();
             ba.add(a);
         }
-        ((Bullet) object).x = 0;
-        ((Bullet) object).y = 0;
-        ((Bullet) object).setBulletVelocityToZero();
-        object = null;
     }
 }

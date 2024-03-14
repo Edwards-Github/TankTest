@@ -44,11 +44,6 @@ public class Breakable extends Wall {
             if (this.life != 0) {
                 this.life -= 1;
             }
-//            else{
-//                this.img = null;
-//                this.setPosition(-100f, -100f);
-//                this.hitBox.setLocation(-100,-100);
-//            }
         }
     }
 }
