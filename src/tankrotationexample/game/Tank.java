@@ -291,16 +291,20 @@ public class Tank extends GameObject {
         }
 
         // Handle tank vs shell collision
-        if (this.health == 0 && this.lives != 0) {
-            this.health = 100;
-            this.lives -= 1;
-        }
-
-        if (this.health == 0 && this.lives == 0) {
-            this.lives -= 1;
+        if(object instanceof Bullet && this.health == 0 && this.lives == 0 && !((Bullet) object).collided){
+            ((Bullet) object).collided = true; // Mark the bullet as collided
             Animation a = new Animation(this.x, this.y, Resources.getAnimation("nuke"));
             a.start();
             ba.add(a);
+        }
+        else if(object instanceof Bullet && this.health == 0 && !((Bullet) object).collided){
+            this.lives -= 1;
+            this.health = 100;
+            ((Bullet) object).collided = true; // Mark the bullet as collided
+        }
+        else if(object instanceof Bullet && this.health != 0 && !((Bullet) object).collided){
+            this.health -= 50;
+            ((Bullet) object).collided = true; // Mark the bullet as collided
         }
     }
 }

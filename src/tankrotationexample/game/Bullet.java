@@ -10,6 +10,7 @@ public class Bullet extends GameObject{
     private float angle;
     private float R = 2f;
     int damage = 25;
+    boolean collided = false;
 
     Bullet(float x, float y, float angle, BufferedImage img) {
         super(x,y,img);
@@ -76,13 +77,12 @@ public class Bullet extends GameObject{
     public Rectangle getHitBox(){return this.hitBox.getBounds();}
 
     public void handleCollision(Collidable object){
-        if(object instanceof Tank){
-            ((Tank) object).health -= damage;
-            System.out.println("damage: " + damage);
+        if(object instanceof Tank && !((Tank)object).ammo.contains(this)){
+            this.setPosition(-30f,-30f);
+            this.hitBox.setLocation(-30, -30);
+            this.setBulletVelocityToZero();
+            this.collided = true;
         }
-        this.setPosition(-30f,-30f);
-        this.hitBox.setLocation(-30, -30);
-        this.setBulletVelocityToZero();
     }
 
     public void setBulletVelocityToZero(){this.R = 0;}

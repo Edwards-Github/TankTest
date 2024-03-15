@@ -239,29 +239,33 @@ public class GameWorld extends JPanel implements Runnable {
                             ((Breakable) co).update();
                     }
 
-                    // check bullet and tank collisions
-                    if (c instanceof Tank && co instanceof Bullet) {
-                        if (((Tank) c).ammo.contains(co)) {
+                    // shell vs tank collision
+                    if(c instanceof Tank && co instanceof Bullet){
+                        if(((Tank)c).ammo.contains(co)){
                             continue;
                         }
-                        else{
+                        else
+                        {
                             c.handleCollision(co);
                         }
                     }
 
-                    if (co instanceof Tank && c instanceof Bullet) {
-                        if (((Tank) co).ammo.contains(c)) {
+                    if(co instanceof Tank && c instanceof Bullet){
+                        if(((Tank)co).ammo.contains(c)){
                             continue;
                         }
-                        else{
-                            c.handleCollision(co);
+                        else
+                        {
+                            co.handleCollision(c);
                         }
                     }
 
+                    // Healthpack collision
                     if((c instanceof HealthPack && co instanceof Tank) || (co instanceof HealthPack && c instanceof Tank)){
                         c.handleCollision(co);
                     }
 
+                    // BulletPowerUp collision
                     if((c instanceof BulletPowerUp && co instanceof Tank) || (co instanceof BulletPowerUp && c instanceof Tank)){
                         c.handleCollision(co);
                     }
