@@ -262,6 +262,27 @@ public class GameWorld extends JPanel implements Runnable {
                         }
                     }
 
+                    // empowered shell vs tank collision
+                    if(c instanceof Tank && co instanceof EmpoweredBullet){
+                        if(((Tank)c).empoweredAmmo.contains(co)){
+                            continue;
+                        }
+                        else
+                        {
+                            c.handleCollision(co);
+                        }
+                    }
+
+                    if(co instanceof Tank && c instanceof EmpoweredBullet){
+                        if(((Tank)co).empoweredAmmo.contains(c)){
+                            continue;
+                        }
+                        else
+                        {
+                            co.handleCollision(c);
+                        }
+                    }
+
                     // Healthpack collision
                     if((c instanceof HealthPack && co instanceof Tank) || (co instanceof HealthPack && c instanceof Tank)){
                         c.handleCollision(co);
