@@ -148,7 +148,6 @@ public class Tank extends GameObject {
         if (this.shootPressed && this.coolDown >= this.fireDelay) {
             if(empoweredBulletBuff)
             {
-                System.out.println("EmpoweredBulletBuff: " + empoweredBulletBuff);
                 this.coolDown = 0;
                 (new Sound(Resources.getSound("bullet"))).playSound();
                 this.empoweredAmmo.add(new EmpoweredBullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("EmpoweredBullet")));
