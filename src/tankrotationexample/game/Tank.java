@@ -38,6 +38,7 @@ public class Tank extends GameObject {
 
     boolean empoweredBulletBuff = false;
 
+    EmpoweredBullet e;
     Bullet b;
     List<Bullet> ammo = new ArrayList<>();
     List<EmpoweredBullet> empoweredAmmo = new ArrayList<>();
@@ -103,6 +104,13 @@ public class Tank extends GameObject {
 
     void unToggleShootPressed() {
         this.shootPressed = false;
+
+        if(e != null){
+            e.setPosition(this.setBulletStartX(), this.setBulletStartY(), angle);
+            this.empoweredAmmo.add(e);
+            e = null;
+        }
+
         if (b != null) {
             b.setPosition(this.setBulletStartX(), this.setBulletStartY(), angle);
             this.ammo.add(b);
@@ -167,6 +175,7 @@ public class Tank extends GameObject {
 
         this.coolDown += this.rateOfFire;
         this.ammo.forEach(b -> b.update());
+        this.empoweredAmmo.forEach(e -> e.update());
 //        this.ba.removeIf(a -> !a.isRunning());
         centerScreen();
     }
@@ -326,6 +335,23 @@ public class Tank extends GameObject {
         else if(object instanceof Bullet && this.health != 0 && !((Bullet) object).collided){
             this.health -= 50;
             ((Bullet) object).collided = true; // Mark the bullet as collided
+        }
+
+        // Handle tank vs empowered shell collision
+        if(object instanceof EmpoweredBullet && this.health == 0 && this.lives == 0 && !((EmpoweredBullet) object).collided){
+            ((EmpoweredBullet) object).collided = true; // Mark the bullet as collided
+            Animation a = new Animation(this.x, this.y, Resources.getAnimation("nuke"));
+            a.start();
+            ba.add(a);
+        }
+        else if(object instanceof EmpoweredBullet && this.health == 0 && !((EmpoweredBullet) object).collided){
+            this.lives -= 1;
+            this.health = 100;
+            ((EmpoweredBullet) object).collided = true; // Mark the bullet as collided
+        }
+        else if(object instanceof EmpoweredBullet && this.health != 0 && !((EmpoweredBullet) object).collided){
+            this.health -= 50;
+            ((EmpoweredBullet) object).collided = true; // Mark the bullet as collided
         }
     }
 }

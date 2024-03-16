@@ -17,11 +17,6 @@ public class EmpoweredBullet extends GameObject{
         this.angle = angle;
     }
 
-    public EmpoweredBullet(float x, float y, BufferedImage img) {
-        super(x, y, img);
-    }
-
-
     void setPosition(float x, float y, float angle) {
         this.x = x;
         this.y = y;
@@ -81,13 +76,13 @@ public class EmpoweredBullet extends GameObject{
     public Rectangle getHitBox(){return this.hitBox.getBounds();}
 
     public void handleCollision(Collidable object){
-        if(object instanceof Tank && !((Tank)object).ammo.contains(this)){
+        if(object instanceof Tank && !((Tank)object).empoweredAmmo.contains(this)){
             this.setPosition(-30f,-30f);
             this.hitBox.setLocation(-30, -30);
-            this.setBulletVelocityToZero();
+            this.setEmpoweredBulletVelocityToZero();
             this.collided = true;
         }
     }
 
-    public void setBulletVelocityToZero(){this.R = 0;}
+    public void setEmpoweredBulletVelocityToZero(){this.R = 0;}
 }

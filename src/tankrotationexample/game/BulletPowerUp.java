@@ -31,11 +31,10 @@ public class BulletPowerUp extends PowerUp{
 
     public void handleCollision(Collidable obj) {
         if(obj instanceof Tank){
-            ((Tank) obj).health += 25;
+            ((Tank) obj).empoweredBulletBuff = true;
             this.img = null;
             this.setPosition(-100f, -100f);
             this.hitBox.setLocation(-100,-100);
-            ((Tank) obj).empoweredBulletBuff = true;
         }
     }
 }
