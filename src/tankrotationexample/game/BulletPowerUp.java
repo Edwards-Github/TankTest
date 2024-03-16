@@ -16,7 +16,7 @@ public class BulletPowerUp extends PowerUp{
         this.x = x;
         this.y = y;
     }
-    
+
     public void drawImage(Graphics2D g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         // rotation.rotate(this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
@@ -31,12 +31,11 @@ public class BulletPowerUp extends PowerUp{
 
     public void handleCollision(Collidable obj) {
         if(obj instanceof Tank){
-            if(((Tank) obj).health != 100){
-                ((Tank) obj).health += 25;
-                this.img = null;
-                this.setPosition(-100f, -100f);
-                this.hitBox.setLocation(-100,-100);
-            }
+            ((Tank) obj).health += 25;
+            this.img = null;
+            this.setPosition(-100f, -100f);
+            this.hitBox.setLocation(-100,-100);
+            ((Tank) obj).empoweredBulletBuff = true;
         }
     }
 }

@@ -36,9 +36,11 @@ public class Tank extends GameObject {
     private boolean LeftPressed;
     private boolean shootPressed;
 
+    boolean empoweredBulletBuff = false;
 
     Bullet b;
     List<Bullet> ammo = new ArrayList<>();
+    List<EmpoweredBullet> empoweredAmmo = new ArrayList<>();
     List<Animation> ba = new ArrayList<>();
 
     Tank(float x, float y, BufferedImage img) {
@@ -136,12 +138,31 @@ public class Tank extends GameObject {
         }
 
         if (this.shootPressed && this.coolDown >= this.fireDelay) {
-            this.coolDown = 0;
-            (new Sound(Resources.getSound("bullet"))).playSound();
-            this.ammo.add(new Bullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("bullet")));
-            Animation a = new Animation(setBulletStartX() - 13, setBulletStartY() - 10, Resources.getAnimation("bullet"));
-            a.start();
-            ba.add(a);
+            if(empoweredBulletBuff)
+            {
+                System.out.println("EmpoweredBulletBuff: " + empoweredBulletBuff);
+                this.coolDown = 0;
+                (new Sound(Resources.getSound("bullet"))).playSound();
+                this.empoweredAmmo.add(new EmpoweredBullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("EmpoweredBullet")));
+                Animation a = new Animation(setBulletStartX() - 13, setBulletStartY() - 10, Resources.getAnimation("bullet"));
+                a.start();
+                ba.add(a);
+            }
+            else
+            {
+                this.coolDown = 0;
+                (new Sound(Resources.getSound("bullet"))).playSound();
+                this.ammo.add(new Bullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("bullet")));
+                Animation a = new Animation(setBulletStartX() - 13, setBulletStartY() - 10, Resources.getAnimation("bullet"));
+                a.start();
+                ba.add(a);
+            }
+//            this.coolDown = 0;
+//            (new Sound(Resources.getSound("bullet"))).playSound();
+//            this.ammo.add(new Bullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("bullet")));
+//            Animation a = new Animation(setBulletStartX() - 13, setBulletStartY() - 10, Resources.getAnimation("bullet"));
+//            a.start();
+//            ba.add(a);
         }
 
         this.coolDown += this.rateOfFire;

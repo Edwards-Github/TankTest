@@ -222,6 +222,8 @@ public class GameWorld extends JPanel implements Runnable {
         // add bullets to colliding list and makes bullet collision work, but lags really hard
         this.colliding.addAll(t1.ammo);
         this.colliding.addAll(t2.ammo);
+        this.colliding.addAll(t1.empoweredAmmo);
+        this.colliding.addAll(t2.empoweredAmmo);
         for (int i = 0; i < this.colliding.size(); i++) {
             Collidable c = this.colliding.get(i);
             for (int j = 0; j < this.colliding.size(); j++) {
@@ -276,5 +278,7 @@ public class GameWorld extends JPanel implements Runnable {
         // removes ammo list after checking for collision also removed lag
         this.colliding.removeAll(t1.ammo);
         this.colliding.removeAll(t2.ammo);
+        this.colliding.removeAll(t1.empoweredAmmo);
+        this.colliding.removeAll(t2.empoweredAmmo);
     }
 }
