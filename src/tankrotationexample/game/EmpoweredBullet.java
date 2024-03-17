@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 public class EmpoweredBullet extends GameObject{
     private float angle;
     private float R = 2f;
-    int damage = 25;
+    int damage = 50;
     boolean collided = false;
 
     EmpoweredBullet(float x, float y, float angle, BufferedImage img) {

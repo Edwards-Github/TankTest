@@ -279,7 +279,7 @@ public class Tank extends GameObject {
         }
         this.empoweredAmmo.forEach(e -> e.drawImage(g2d));
         g2d.setColor(Color.MAGENTA);
-        g2d.drawRect((int) this.x, (int) this.y, this.img.getWidth(), this.img.getHeight());
+        g2d.drawRect((int) x, (int) y, this.img.getWidth(), this.img.getHeight());
 
         // draw animation
         this.ba.forEach(a -> a.drawImage(g2d));
