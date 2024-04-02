@@ -150,7 +150,7 @@ public class Tank extends GameObject {
             {
                 this.coolDown = 0;
                 (new Sound(Resources.getSound("bullet"))).playSound();
-                this.empoweredAmmo.add(new EmpoweredBullet(this.setBulletStartX(), this.setBulletStartY(), angle, Resources.getImage("EmpoweredBullet")));
+                this.empoweredAmmo.add(new EmpoweredBullet(this.setEmpoweredBulletStartX(), this.setEmpoweredBulletStartY(), angle, Resources.getImage("EmpoweredBullet")));
                 Animation a = new Animation(setBulletStartX() - 13, setBulletStartY() - 10, Resources.getAnimation("bullet"));
                 a.start();
                 ba.add(a);
@@ -187,6 +187,16 @@ public class Tank extends GameObject {
     private int setBulletStartY() {
         float cy = 29f * (float) Math.sin(Math.toRadians(angle));
         return (int) y + this.img.getHeight() / 2 + (int) cy - 4;
+    }
+
+    private int setEmpoweredBulletStartX() {
+        float cx = 29f * (float) Math.cos(Math.toRadians(angle));
+        return (int) x + this.img.getWidth() / 2 + (int) cx - 50;
+    }
+
+    private int setEmpoweredBulletStartY() {
+        float cy = 29f * (float) Math.sin(Math.toRadians(angle));
+        return (int) y + this.img.getHeight() / 2 + (int) cy - 50;
     }
 
     private void rotateLeft() {

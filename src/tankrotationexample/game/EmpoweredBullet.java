@@ -33,6 +33,15 @@ public class EmpoweredBullet extends GameObject{
         this.hitBox.setLocation((int) this.x, (int) this.y);
     }
 
+    private int setEmpoweredBulletStartX() {
+        float cx = 29f * (float) Math.cos(Math.toRadians(angle));
+        return (int) x + this.img.getWidth() / 2 + (int) cx;
+    }
+
+    private int setEmpoweredBulletStartY() {
+        float cy = 29f * (float) Math.sin(Math.toRadians(angle));
+        return (int) y + this.img.getHeight() / 2 + (int) cy;
+    }
 
     private void moveForwards() {
         x += Math.round(R * Math.cos(Math.toRadians(angle)));
