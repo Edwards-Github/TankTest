@@ -61,7 +61,7 @@ public class GameWorld extends JPanel implements Runnable {
                 this.repaint(); //redraw game
                 Thread.sleep(1000 / 144);
 
-                if((this.t1.lives < 0 && this.t1.health <= 0) || (this.t2.lives < 0 && this.t2.health <= 0)){
+                if((this.t1.lives < 0 && this.t1.health <= 50) || (this.t2.lives < 0 && this.t2.health <= 50)){
                     timer.schedule(new TimerTask() {
                         @Override
                         public void run(){
