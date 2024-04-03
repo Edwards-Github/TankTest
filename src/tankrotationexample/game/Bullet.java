@@ -83,6 +83,12 @@ public class Bullet extends GameObject{
             this.setBulletVelocityToZero();
             this.collided = true;
         }
+        else if(object instanceof Breakable){
+            this.setPosition(-30f,-30f);
+            this.hitBox.setLocation(-30, -30);
+            this.setBulletVelocityToZero();
+            this.collided = true;
+        }
     }
 
     public void setBulletVelocityToZero(){this.R = 0;}

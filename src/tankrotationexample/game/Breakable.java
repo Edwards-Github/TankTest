@@ -43,6 +43,7 @@ public class Breakable extends Wall {
         if (object instanceof Bullet) {
             if (this.life != 0) {
                 this.life -= 1;
+                System.out.println("Breakable life: " + this.life);
             }
         }
     }
