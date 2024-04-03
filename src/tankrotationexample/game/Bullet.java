@@ -77,18 +77,10 @@ public class Bullet extends GameObject{
     public Rectangle getHitBox(){return this.hitBox.getBounds();}
 
     public void handleCollision(Collidable object){
-        if(object instanceof Tank && !((Tank)object).ammo.contains(this)){
-            this.setPosition(-30f,-30f);
-            this.hitBox.setLocation(-30, -30);
-            this.setBulletVelocityToZero();
-            this.collided = true;
-        }
-        else if(object instanceof Breakable){
-            this.setPosition(-30f,-30f);
-            this.hitBox.setLocation(-30, -30);
-            this.setBulletVelocityToZero();
-            this.collided = true;
-        }
+        this.setPosition(-30f,-30f);
+        this.hitBox.setLocation(-30, -30);
+        this.setBulletVelocityToZero();
+        this.collided = true;
     }
 
     public void setBulletVelocityToZero(){this.R = 0;}
